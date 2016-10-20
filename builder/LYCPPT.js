@@ -39,16 +39,16 @@ Array.prototype.insert = function (index, item) {
                  "builder/Class_lib.js"
              ],
              templetes:[
-                 {name:"语音+图片", path:"builder/Templete/"},
-                 {name:"语音+文字", path:"builder/Templete/"},
+                 {name:"语音+图片", path:"builder/Templete/NSPage+SoundAndImage.js"},
+                 {name:"语音+文字", path:"builder/Templete/NSPage+SoundAndText.js"},
                  {name:"时间点文字",path:"builder/Templete/"},
-                 {name:"视频",      path:"builder/Templete/"},
-                 {name:"填空题",    path:"builder/Templete/"},
-                 {name:"图片选择题",path:"builder/Templete/"},
-                 {name:"词句选择题",path:"builder/Templete/"},
-                 {name:"图文选择题",path:"builder/Templete/"},
-                 {name:"注音选择题",path:"builder/Templete/"},
-                 {name:"文字选择题",path:"builder/Templete/"}
+                 {name:"视频",      path:"builder/Templete/NSPage+Video.js"},
+                 {name:"填空题",    path:"builder/Templete/NSPage+TextRadio+FillBlank.js"},
+                 {name:"图片选择题",path:"builder/Templete/NSPage+ImageRadio.js"},
+                 {name:"词句选择题",path:"builder/Templete/NSPage+TextRadio.js"},
+                 {name:"图文选择题",path:"builder/Templete/NSPage+TextRadio+Image.js"},
+                 {name:"注音选择题",path:"builder/Templete/NSPage+TextRadio+PinYin.js"},
+                 {name:"文字选择题",path:"builder/Templete/NSPage+WordRadio.js"}
              ]
          },
          id:0,
