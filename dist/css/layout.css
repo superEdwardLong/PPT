@@ -172,7 +172,7 @@ header {
         margin: 0;
         list-style: none;
         color: #6b7f98; }
-    header .headerInner button {
+    header .headerInner a.ui-button {
       -webkit-border-radius: 0.5rem;
       -moz-border-radius: 0.5rem;
       border-radius: 0.5rem;
@@ -193,7 +193,9 @@ header {
       height: 2.375rem;
       right: -10.5rem;
       top: 50%;
-      margin-top: -1.1875rem; }
+      margin-top: -1.1875rem;
+      text-align: center;
+      line-height: 2.375rem; }
 
 .headerInnerToolbar > li {
   position: relative;
@@ -360,46 +362,6 @@ header {
   transform: rotate(45deg);
   transition: all 0.4s ease-in; }
 
-.ui-loading {
-  width: 100%;
-  text-align: center;
-  display: -webkit-box;
-  /* OLD - iOS 6-, Safari 3.1-6 */
-  display: -moz-box;
-  /* OLD - Firefox 19- (buggy but mostly works) */
-  display: -ms-flexbox;
-  /* TWEENER - IE 10 */
-  display: -webkit-flex;
-  /* NEW - Chrome */
-  display: flex;
-  /* NEW, Spec - Opera 12.1, Firefox 20+ */
-  /* Y 轴对齐
-     @box-align: start      | end      | center | baseline | stretch;
-     @align-item:flex-start | flex-end | center | baseline | stretch;
-  */
-  -webkit-box-align: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-  /* Y 轴对齐
-     @box-align: start      | end      | center | baseline | stretch;
-     @align-item:flex-start | flex-end | center | baseline | stretch;
-  */
-  -webkit-box-pack: center;
-  -moz-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  color: #999;
-  overflow: hidden;
-  padding: 0.5rem 0;
-  font-size: 0.75rem; }
-  .ui-loading img {
-    margin-right: 0.5rem;
-    display: inline-block;
-    vertical-align: middle; }
-
 #content {
   width: auto;
   overflow: hidden;
@@ -432,6 +394,8 @@ header {
     width: 100%; }
   .list-inner .ItemRow {
     margin-bottom: 1rem; }
+  .list-inner .ItemRow:last-child {
+    margin-bottom: 0; }
 
 #pullDown, #pullUp {
   height: 40px;
@@ -975,10 +939,26 @@ header {
     width: 5rem; }
 
 .dashedRect {
-  border: dashed 2px #d0d0d0;
+  border: dashed 1px #d0d0d0;
   padding: 0.25rem;
   width: 30rem;
-  height: 16.875rem; }
+  height: 16.875rem;
+  position: relative;
+  overflow: hidden;
+  background-color: #fefefe; }
+
+.dashedRect:after {
+  content: "Image";
+  display: block;
+  position: absolute;
+  top: 40%;
+  bottom: 40%;
+  left: 30%;
+  right: 30%;
+  color: #d0d0d0;
+  font-size: 2rem;
+  text-align: center;
+  font-family: Arial; }
 
 .blackRect {
   width: 30rem;
@@ -1005,7 +985,7 @@ header {
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain; }
-  .editorImageRect button {
+  .editorImageRect a {
     position: absolute;
     top: 50%;
     left: 50%;

@@ -1,9 +1,26 @@
 input,textarea,select,button{
-    -webkit-appearance: none;
+    /*很关键：将默认的select选择框样式清除*/
+
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    appearance:none;
+
     -webkit-tap-highlight-color:transparent;
     outline:none;
+
+
 }
-select{ height: 26px; min-width: 40px; text-align: center }
+select{
+    height: 26px;
+    min-width: 40px;
+    text-align: center;
+    border: solid 1px #d0d0d0;
+    padding-left: 8px;
+    padding-right: 8px;
+
+}
+select option{text-indent: 10px; text-align: center;}
+
 textarea{
     width: 90%;
     height: 80px;

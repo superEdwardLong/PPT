@@ -1,55 +1,6 @@
 /**
  * Created by BOT01 on 16/10/18.
  */
-var NSObject = function(){};
-NSObject.prototype = {
-    id : null,
-    backgroundSound : null,//背景音乐
-    index:0,
-    show : function(){
-        //页面基础布局架构
-    },
-    setValue : function(value,isEdit){
-        //填充页面数据
-
-    },
-    getValue : function(){
-        //提取页面数据
-    },
-
-    editor : function(){
-        //编辑器
-    },
-    didShowEnding : function(superClass){
-        //展示结束
-        if(superClass && superClass.hasOwnProperty("next")){
-            superClass.next();
-        }
-    },
-    save : function(){
-        //保存数据到 indexedDB
-
-    },
-    add:function(){
-
-    },
-    remove:function(){
-
-    },
-    copy:function(){
-
-    }
-};
-
-
-///// 课件页面
-var NSPPTPage = function(){
-    this.backgroundColor = null; //背景颜色
-    this.subjectTitle = null;//题目主题
-    this.answer = null; //答案
-    this.answerSound = null;//答案配音
-}
-NSPPTPage.prototype = new NSObject();
 
 Array.prototype.insert = function (index, item) {
     this.splice(index, 0, item);
@@ -88,16 +39,16 @@ Array.prototype.insert = function (index, item) {
                  "builder/Class_lib.js"
              ],
              templetes:[
-                 {name:"语音+图片", path:"builder/Templete/T_SoundAndImage/template_soundAndImage.js"},
-                 {name:"语音+文字", path:"builder/Templete/T_SoundAndText/template_soundAndText.js"},
-                 {name:"时间点文字",path:"builder/Templete/T_TextOfTime/template_textOfTime.js"},
-                 {name:"视频",      path:"builder/Templete/T_Video/template_video.js"},
-                 {name:"填空题",    path:"builder/Templete/T_FillInTheBlank/template_fillBlank.js"},
-                 {name:"图片选择题",path:"builder/Templete/T_ImageRadio/template_ImageRadio4.js"},
-                 {name:"词句选择题",path:"builder/Templete/T_TextRadio/template_Paragraph.js"},
-                 {name:"图文选择题",path:"builder/Templete/T_TextRadio/template_textAndImageRadio.js"},
-                 {name:"注音选择题",path:"builder/Templete/T_TextRadio/template_textRadioWithPinyin.js"},
-                 {name:"文字选择题",path:"builder/Templete/T_TextRadio/template_textRadio.js"}
+                 {name:"语音+图片", path:"builder/Templete/"},
+                 {name:"语音+文字", path:"builder/Templete/"},
+                 {name:"时间点文字",path:"builder/Templete/"},
+                 {name:"视频",      path:"builder/Templete/"},
+                 {name:"填空题",    path:"builder/Templete/"},
+                 {name:"图片选择题",path:"builder/Templete/"},
+                 {name:"词句选择题",path:"builder/Templete/"},
+                 {name:"图文选择题",path:"builder/Templete/"},
+                 {name:"注音选择题",path:"builder/Templete/"},
+                 {name:"文字选择题",path:"builder/Templete/"}
              ]
          },
          id:0,
