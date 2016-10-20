@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no" />
+    <meta charset="UTF-8">
+    <title>屁屁体</title>
+    <!--[if lt IE 10]><script type="text/javascript" src="builder/jquery-1.9.0.min.js"></script><![endif]-->
+    <!--[if (gt IE 9)|!(IE)]><!-->
+    <script type="text/javascript" src="builder/jquery-2.2.0.min.js"></script> <!--<![endif]-->
+    <link rel="stylesheet" href="dist/css/layout.css" />
+    <link rel="stylesheet" href="dist/css/UI-Form.css" />
+</head>
+<body>
+<header>
+    <div class="headerInner">
+        <div class="headerInnerLeft"><!-- LOGO 区域--> </div>
+        <div class="headerInnerContent">
+            <ul class="headerInnerToolbar">
+                <li><span class="headerToolbarItem redFont_H1" >创建幻影片</span></li>
+                <li ><a class="headerToolbarItem" href="javascript:void(0)" data-state="selected"><span class="ui-icon ui-icon-create"></span>新建一页<span class="ui-icon ui-icon-arrowDown"></span></a></li>
+                <li><a class="headerToolbarItem" href="javascript:void(0)"><span class="ui-icon ui-icon-copy"></span>复制当前页</a></li>
+                <li><a class="headerToolbarItem" href="javascript:void(0)"><span class="ui-icon ui-icon-music"></span>背景音乐<span class="ui-icon ui-icon-arrowDown"></span></a></li>
+                <li><a class="headerToolbarItem" href="javascript:void(0)"><span class="ui-icon ui-icon-preview"></span>预览</a></li>
+            </ul>
+        </div>
+        <button class="ui-button">提交</button>
+    </div>
+    <section style="display: none">
+        <ul class="sectionToolbar">
+            <!--
+            <li data-state="selected"><a class="sectionToolbarItem" href="javascript:void(0)">模板 002</a></li>
+            <li><a class="sectionToolbarItem" href="javascript:void(0)">模板 002</a></li>
+            <li><a class="sectionToolbarItem" href="javascript:void(0)">模板 002</a></li>
+            <li><a class="sectionToolbarItem" href="javascript:void(0)">模板 002</a></li>
+            -->
+        </ul>
+        <ul class="sectionOptions">
+            <li data-state="selected">
+                <a class="soundOptionsItem" href="javascript:void(0)">
+                    <span>模板 001</span>
+                </a>
+            </li>
+            <li>
+                <a class="soundOptionsItem" href="javascript:void(0)">
+                    <span>模板 002</span>
+                </a>
+            </li>
+
+        </ul>
+    </section>
+
+</header>
+<table align="center" cellpadding="0" cellspacing="0" id="content">
+    <tr>
+        <td class="cell_2">
+            <div id="pageController">
+                <div class="pageControllerHeader"><span>NO.</span> <span>预览图</span></div>
+                <div class="pageControllerInner">
+                    <ol>
+                        <li data-state="selected"> <canvas id="thumbnail_1" width="300" height="168"> </canvas> </li>
+                    </ol>
+                </div>
+            </div>
+        </td>
+        <td class="cell_3">
+            <div id="EditRect">
+                <div class="editorBox" data-theme="allBoder">
+                    <div class="editorBoxHeader"><span class="ui-icon ui-icon-sound"></span><span>语音编辑</span></div>
+                    <div class="editorBoxInner">
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="15%" align="center">语音</td>
+                                <td>
+                                    <ol class="editorSoundList">
+                                        <li> <a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="green"><span class="ui-icon ui-icon-soundWave "></span>58''</a> </li>
+                                        <li> <a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="gray"><span class="ui-icon ui-icon-soundWave "></span> 1'30''</a> </li>
+                                    </ol>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <button data-type="button"  data-theme="green">上传声音</button>
+                                    <span>
+                                        添加
+                                    <select>
+                                        <option value="3">3秒</option>
+                                        <option value="5">5秒</option>
+                                        <option value="7">7秒</option>
+                                        <option value="9">9秒</option>
+                                    </select>
+                                        空声音
+                                    </span>
+                                    <button data-type="button"  data-theme="gray">确认添加</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="editorBox" data-theme="allBoder">
+                    <div class="editorBoxHeader"><span class="ui-icon ui-icon-image"></span><span>图片编辑</span></div>
+                    <div class="editorBoxInner">
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="15%" align="center">
+                                    图片
+                                </td>
+                                <td>
+                                    <div class = "dashedRect">
+
+                                    </div>
+                                </td>
+                                <td width="15">
+                                    <button data-type="button"  data-theme="gray">上传图片</button>
+                                    <form style="display: none"> <input type="file" value=""  /></form>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="editorBox" data-theme="allBoder">
+                    <div class="editorBoxHeader"><span class="ui-icon ui-icon-text"></span><span>文字编辑</span></div>
+                    <div class="editorBoxInner">
+
+                    </div>
+                </div>
+                <div class="editorBox" data-theme="allBoder">
+                    <div class="editorBoxHeader"><span class="ui-icon ui-icon-text"></span><span>题目文字</span></div>
+                    <div class="editorBoxInner">
+                        <textarea placeholder="10字以内"></textarea>
+                    </div>
+                </div>
+                <div class="editorBox" data-theme="allBoder">
+                    <div class="editorBoxHeader"><span class="ui-icon ui-icon-text"></span><span>题目答案</span></div>
+                    <div class="editorBoxInner">
+                        <ol class="editorTextQuestionList">
+                            <li> <input type="text" value="" class="ui-textfield" placeholder="请输入答案"/> <button data-type="button" data-theme="green">配音 </button> <a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="green"><span class="ui-icon ui-icon-soundWave "></span>58''</a> </li>
+                            <li> <input type="text" value="" class="ui-textfield" placeholder="请输入答案"/> <button data-type="button" data-theme="green">配音 </button> <a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="gray"><span class="ui-icon ui-icon-soundWave "></span>58''</a> </li>
+                        </ol>
+                    </div>
+                    <div class="editorBoxFooter">
+                        <label>
+                            √ 正确答案
+                            <input type="text" value="" class="ui-textfield" placeholder="答案"/>
+                        </label>
+                        <button data-type="button" data-theme="green">配音 </button>
+                        <a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="green"><span class="ui-icon ui-icon-soundWave "></span>58''</a>
+                    </div>
+                </div>
+
+                <div class="editorBox" data-theme="allBoder">
+                    <div class="editorBoxHeader"><span class="ui-icon ui-icon-video"></span><span>图片题目</span></div>
+                    <div class="editorBoxInner">
+                        <ol>
+                            <li>
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td>
+                                            <div class="editorImageRect">
+                                                <div class="editorImageInner">
+
+                                                </div>
+                                                <button  data-type="button" data-theme="green">图片上传 </button>
+                                            </div>
+                                        </td>
+                                        <td>
+
+                                            <input type="text"  value="图片上传" class="ui-textfield" />
+                                        </td>
+                                        <td>
+                                            <button data-type="button" data-theme="green">配音 </button> <br/><br/>
+                                            <a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="gray"><span class="ui-icon ui-icon-soundWave "></span>58''</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </li>
+                            <li>
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td>
+                                            <div class="editorImageRect">
+                                                <div class="editorImageInner">
+
+                                                </div>
+                                                <button  data-type="button" data-theme="green">图片上传 </button>
+                                            </div>
+                                        </td>
+                                        <td>
+
+                                            <input type="text"  value="图片上传" class="ui-textfield" />
+                                        </td>
+                                        <td>
+                                            <button data-type="button" data-theme="green">配音 </button> <br/><br/>
+                                            <a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="gray"><span class="ui-icon ui-icon-soundWave "></span>58''</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </li>
+                        </ol>
+
+                    </div>
+                </div>
+
+                <div class="editorBox" data-theme="allBoder">
+                    <div class="editorBoxHeader"><span class="ui-icon ui-icon-video"></span><span>视频编辑</span></div>
+                    <div class="editorBoxInner">
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="15%" align="center">
+                                    视频
+                                </td>
+                                <td>
+                                    <div class = "blackRect">
+
+                                    </div>
+                                </td>
+                                <td width="15">
+                                    <button data-type="button"  data-theme="gray">上传视频</button>
+                                    <form style="display: none"> <input type="file" value=""  /></form>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+<script type="text/javascript" src="builder/LYCPPT.js" id="builder_0"></script>
+</html>
+
+
+

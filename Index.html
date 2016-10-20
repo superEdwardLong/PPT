@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no" />
+    <meta charset="UTF-8">
+    <title>屁屁体</title>
+    <!--[if lt IE 10]><script type="text/javascript" src="builder/jquery-1.9.0.min.js"></script><![endif]-->
+    <!--[if (gt IE 9)|!(IE)]><!-->
+    <script type="text/javascript" src="builder/jquery-2.2.0.min.js"></script> <!--<![endif]-->
+
+    <link rel="stylesheet" href="dist/css/layout.css" />
+    <link rel="stylesheet" href="dist/css/UI-Form.css" />
+</head>
+<body>
+    <table align="center" cellpadding="0" cellspacing="0" id="content">
+        <tr>
+            <td class="cell_1">
+                <div id="MakeRect" >
+                    <div class="MakeRectHeader">
+                        <a href="#" data-role="button"> + </a>
+                    </div>
+                    <div class="MakeRectContent">
+                        <a href="PPTEditor.html?model=0&amp;id=0" data-role="button">创建幻灯片</a>
+                        <a href="PPTEditor.html?model=1&amp;id=0" data-role="button">创建幻影片</a>
+                    </div>
+                </div>
+            </td>
+            <td class="cell_2">
+                <div id="MasterRect" >
+                        <div class="MainLogoRect">
+                            <img src="dist/Images/ui-logo-white.png" />
+                        </div>
+                        <div data-type="section" >
+                            <div id="LoginPanel" data-theme="a">
+                                <div data-role="InputRect" id="PPTIDTextField">
+                                    <input type="text" value="123456" placeholder="PP号" maxlength="20" />
+                                </div>
+
+                                <div data-role="InputRect" id="PPTPSTextField">
+                                    <input type="password" value="6049" placeholder="密码" maxlength="20" />
+                                </div>
+                                <div class="ui-err"></div>
+                                <input type="button" data-theme="orange" value="登录" class="ui-button" id="login-btn" />
+                                <label>PP号需要在手机客户端注册</label>
+                            </div>
+                            <div class="qr-code">
+                                <img src="dist/Images/qr-code.jpg" />
+                                <label>
+                                    扫描二维码下载客户端
+                                </label>
+                            </div>
+                        </div>
+
+                </div>
+            </td>
+            <td class="cell_3">
+                    <div class="list-inner" id="list-inner">
+                        <div class="list-inner-block">
+                            <div id="pullDown">
+                                <span class="pullDownIcon"></span><span class="pullDownLabel">下拉刷新...</span>
+                            </div>
+                            <div class="scroller">
+
+                            </div>
+                            <div id="pullUp">
+                                <span class="pullUpIcon"></span><span class="pullUpLabel">上拉加载更多...</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </td>
+        </tr>
+    </table>
+
+
+</body>
+</html>
+<script type="text/javascript" src="builder/iscroll.js"></script>
+<script type="text/javascript" src="builder/Class_lib.js"></script>
+<script type="text/javascript" src="builder/UIView.js"></script>
+<script type="text/javascript" src="dist/JS/IndexViewController.js"></script>
