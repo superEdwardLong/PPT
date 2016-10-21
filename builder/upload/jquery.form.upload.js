@@ -2,18 +2,15 @@
  * Created by BOT01 on 16/9/14.
  * 文件上传基类
  */
+var ImageTypeEnum = {
+    background:0,
+    option:1,
+    icon:2
+}
+
 function Upload(){
-    //var el = $("#"+formId);
-    //var updateId = el.attr("data-id");
-
-    var formId = "PageUploadForm";
-    var updateId = 1;
-
-    this.sender = {
-        updateId:updateId,
-        el:el,
-        interface:null
-    }
+    this.formId = "PageUploadForm";
+    this.uploadId = 0;              //新增:0   修改: >0
 
     this.didUpload = function(Result){
         console.log("上传完成");
@@ -42,9 +39,22 @@ function Upload(){
 */
 function ImageUpload(){
     var _upload = new Upload();
-    _upload.sender.interface = "";
+    _upload.interface = "";
+    _upload.imageType = ImageTypeEnum.background;
     _upload.didUpload = function(Result){
         alert("图片上传完成")
+        switch (this.imageType){
+            case ImageTypeEnum.background :{
+
+            }break;
+            case ImageTypeEnum.option:{
+
+            }break;
+            case ImageTypeEnum.icon:{
+
+            }break;
+        }
+
     }
     return _upload;
 }
@@ -55,7 +65,7 @@ function ImageUpload(){
  */
 function VideoUpload(){
     var _upload = new Upload();
-    _upload.sender.interface = "";
+    _upload.interface = "";
     _upload.didUpload = function(Result){
         alert("视频上传完成")
     }
@@ -69,7 +79,7 @@ function VideoUpload(){
  */
 function SoundUpload(){
     var _upload = new Upload();
-    _upload.sender.interface = "";
+    _upload.interface = "";
     _upload.didUpload = function(Result){
         alert("配音上传完成")
     }

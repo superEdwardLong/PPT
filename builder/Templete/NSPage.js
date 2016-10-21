@@ -22,7 +22,7 @@ NSObject.prototype = {
         //提取页面数据
     },
 
-    editor : function(){
+    editor : function(superView){
         //编辑器
     },
     didShowEnding : function(superClass){

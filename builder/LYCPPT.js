@@ -41,7 +41,7 @@ Array.prototype.insert = function (index, item) {
              templetes:[
                  {name:"语音+图片", path:"builder/Templete/NSPage+SoundAndImage.js"},
                  {name:"语音+文字", path:"builder/Templete/NSPage+SoundAndText.js"},
-                 {name:"时间点文字",path:"builder/Templete/"},
+                 {name:"时间点文字",path:"builder/Templete/NSPage+TimeText.js"},
                  {name:"视频",      path:"builder/Templete/NSPage+Video.js"},
                  {name:"填空题",    path:"builder/Templete/NSPage+TextRadio+FillBlank.js"},
                  {name:"图片选择题",path:"builder/Templete/NSPage+ImageRadio.js"},
@@ -110,7 +110,7 @@ Array.prototype.insert = function (index, item) {
             * */
             load_files(true);
 
-
+            this.addPageWith(ImageRadioPage(),0);
 
         },
 
