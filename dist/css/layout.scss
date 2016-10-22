@@ -56,7 +56,12 @@
   display: -webkit-flex;     /* NEW - Chrome */
   display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
 }
-
+@mixin flexGrow($val){
+  -ms-flex: $val;
+  -moz-box-flex: $val;
+  -webkit-flex-grow: $val;
+  flex-grow: $val;
+}
 @mixin flexAlign($direction,$align){
   /* Y 轴对齐
      @box-align: start      | end      | center | baseline | stretch;
@@ -166,7 +171,9 @@ input{
   z-index: -1;
 }
 
-
+audio, #PageUploadForm{
+  display: none; 
+}
 
 
 header{
@@ -179,7 +186,7 @@ header{
     }
     .sectionToolbar{
       li{
-        float: right;
+        float: right;border-bottom: solid 2px transparent;
         .sectionToolbarItem{ padding: 0 1rem;  line-height: 2rem; border-right: solid 1px #d0d0d0;}
 
       }
@@ -187,7 +194,7 @@ header{
         .sectionToolbarItem{border-right: none;}
       }
       li[data-state=selected],
-      li:hover{  color:#ef455f; }
+      li:hover{  color:#ef455f; border-bottom: solid 2px #ef455f; }
 
     }
     .sectionOptions{
@@ -312,7 +319,7 @@ header{
 
 #EditRect{ width: 100%; overflow: hidden; margin-top: 6.625rem; }
 .editorBox{
-  padding: 1rem; background-color: #fff; margin-bottom: 1rem; @include shadow(0,0,0.5rem, #ccc);
+  padding: 1rem; background-color: #fff; margin-bottom: 1rem;
   .editorBoxHeader{
     height: 2rem; line-height: 2rem; padding-bottom: 0.75rem; border-bottom: solid 1px #d0d0d0; color: #ef495f;
   }
@@ -332,7 +339,146 @@ header{
 }
 .editorBox[data-theme="allBoder"]{
   border:solid 1px #d0d0d0;
+  @include shadow(0,0,0.5rem, #ccc);
 }
+.editorBoxToolbar{
+  .font-options-item{display: inline-block; padding:.5rem; vertical-align: baseline; margin-right: 1rem; border-bottom: solid 1px transparent}
+  .font-options-item:hover,
+  .font-options-item[data-state="selected"]{color:#ef455f; border-bottom: solid 1px #ef495f}
+  color: #666; padding:0.5rem 1rem;
+  label{ margin-right: 1rem; position: relative; padding-left: 1.4rem; }
+
+  input[type=radio] + label{
+    border: none;
+    background: white;
+    color: inherit;
+  }
+  input[type=radio] + label:before{
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    border:solid 1px #d0d0d0;
+    width:1rem; height: 1rem;
+    @include radius(100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  input[type=radio]:checked + label{
+    border: none;
+    background: white;
+    color: #ef495f;
+  }
+  input[type=radio]:checked + label:before{
+    border:solid 1px #ef495f;
+  }
+  input[type=radio]:checked + label:after{
+    display: inline-block;
+    position: absolute;
+    top: .1875rem;
+    left: .1875rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    @include radius(100%);
+    content: '';
+    background-color:#ef495f ;
+    z-index: 2;
+  }
+}
+
+.fillBlankBox{
+  @include flexBox;
+  @include flexAlign("v",center);
+  div{
+    @include flexGrow(2);
+    flex-shrink: 1;
+    text-align: center;
+  }
+  div:nth-child(2){
+    @include flexGrow(1);
+    background-color: #f2f2f2;
+    position: relative;
+    height: 1.875rem;
+    overflow:hidden;
+    @include radius(0.25rem);
+    span{display: inline-block; position: absolute; padding: 0.25rem; background-color: #f2f2f2; top: 15%; bottom: 15%; left: 15%; right: 15%; z-index: 9; font-size: 0.75rem}
+  }
+  div:nth-child(2):before,
+  div:nth-child(2):after{
+    content: "";
+    height: 1px;
+    background-color: #d0d0d0;
+    position: absolute;
+    top: 50%;
+    left: -25%;
+    right: -25%;
+    z-index: 1;
+    display: block;
+  }
+  div:nth-child(2):before{
+    @include transform(rotate(20deg));
+  }
+  div:nth-child(2):after{
+    @include transform(rotate(-20deg));
+  }
+  input{ width: 90%;}
+}
+.color_picker_rect{
+  font-size: 0.75rem;
+  @include flexBox;
+  .color_picker_option{
+    @include flexGrow(2); width: 20%;overflow: hidden;
+    span{ display: block; overflow: hidden; margin-bottom: 1rem;}
+    a{ width:75%; }
+    i{ display: block; margin-top: 0.25rem; background-color: #2e8ded; width: 50%; height: 0.25rem; margin-left: 0.5rem;}
+  }
+  .color_picker_slider{
+    @include flexGrow(3);width: 30%;overflow: hidden;
+    label{
+      display: block; margin-bottom: 0.25rem; overflow: hidden;
+      strong{ display:inline-block; width: 3rem; vertical-align: top ; font-weight: normal}
+      i{ width: 2rem; display: inline-block;vertical-align: top}
+      input{ margin: 0}
+    }
+  }
+  .color_picker_list{
+    @include flexGrow(5);
+    width: 50%;
+    flex-wrap:wrap;
+    overflow: hidden;
+
+    span{
+      width: 1.75rem; height: 1.75rem; margin: 0.25rem;
+      border: solid 1px #f2f2f2;
+      cursor: pointer; display:inline-block;
+    }
+  }
+}
+.ui-layout-topBottom,
+.ui-layout-leftRight{
+  width: 0.875rem;
+  height: 0.875rem;
+  display: inline-block;
+  vertical-align: top;
+  border:solid 1px #ef455f;
+  position: relative;
+  margin: 0 0.5rem;
+}
+.ui-layout-topBottom:before{
+content: ''; display: block; top: 1px; left: 1px; right: 1px; height: 5px ;position: absolute; background-color: #ef495f;
+}
+.ui-layout-topBottom:after{
+  content: ''; display: block; top:7px ; left: 1px; right: 1px;bottom: 1px;position: absolute; background-color: #ef495f;
+}
+.ui-layout-leftRight:before{
+  content: ''; display: block; top: 1px; left: 1px;bottom:1px; width: 5px;position: absolute; background-color: #ef495f;
+}
+.ui-layout-leftRight:after{
+  content: ''; display: block; top: 1px; left: 7px;bottom:1px;  right:1px;position: absolute; background-color: #ef495f;
+}
+
 
 
 .ui-icon{
@@ -382,9 +528,25 @@ header{
   @include transform(rotate(45deg));
   transition: all 0.4s ease-in;
 }
-
-
-
+@mixin icon16_16(){
+  background-repeat: no-repeat;
+  background-position:center center;
+  background-size: contain;
+  width: 1rem;
+  height: 1rem;
+  overflow: hidden;
+  margin: 0 .25rem 0 .5rem;
+  display: inline-block;
+  vertical-align: top;
+}
+.ui-icon-time{
+  background-image: url(../Images/ui-icon-time.png);
+  @include icon16_16;
+}
+.ui-icon-smalltext{
+  @include icon16_16;
+  background-image: url(../Images/ui-icon-Text.png);
+}
 #content{
   width: auto; overflow: hidden; margin: 0 auto;
   .cell_1{ width:11.56rem;padding-right: 0.75rem; display: none}

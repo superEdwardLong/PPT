@@ -14,7 +14,7 @@ Array.prototype.insert = function (index, item) {
         if(isEdit){
             for(var i=0; i< PPT.config.templetes.length;i++){
                 $("#builder_0").before('<script type="text/javascript" src="'+PPT.config.templetes[i].path+'" id="builder_'+(i+PPT.config.basic.length+1)+'"></script>');
-                $(".sectionToolbar").prepend('<a class="sectionToolbarItem" href="javascript:void(0)">'+PPT.config.templetes[i].name+'</a>');
+                $(".sectionToolbar").prepend('<li><a class="sectionToolbarItem" href="javascript:void(0)">'+PPT.config.templetes[i].name+'</a></li>');
             }
         }else{
             for(var i=0; i< PPT.config.templetes.length;i++){
@@ -36,7 +36,8 @@ Array.prototype.insert = function (index, item) {
                  "builder/Upload/jquery.form.upload.js",
                  "builder/jquery.ui.js",//拖拽元素排序
                  "builder/jQuery.Hz2Py-min.js",//汉字拼音
-                 "builder/Class_lib.js"
+                 "builder/Class_lib.js",
+                 "builder/Templete/NSPage.js"
              ],
              templetes:[
                  {name:"语音+图片", path:"builder/Templete/NSPage+SoundAndImage.js"},
@@ -62,7 +63,7 @@ Array.prototype.insert = function (index, item) {
          currtPage:null,   //当前页对象
          pages:[],         //页面集合
 
-        /*创建模板*/
+        /*使用模板创建页面*/
         addPageWith:function(TemplatePage,AtPageIndex){
             //添加模板页
             this.currtPageIndex = AtPageIndex;
@@ -71,7 +72,7 @@ Array.prototype.insert = function (index, item) {
             //添加轨道预览图 并 选中
 
 
-            //this.turnToPage(AtPageIndex,true);
+            this.turnToPage(AtPageIndex,true);
         },
 
             /* 跳转到指定页
@@ -79,8 +80,10 @@ Array.prototype.insert = function (index, item) {
         turnToPage:function(index,isEdit){
             this.currtPage = this.pages[index];
             if(isEdit){
+                console.info(this.currtPage);
+
                 //展示编辑界面 + 轨道预览界面
-                this.currtPage.editor();
+                this.currtPage.editor($("#EditRect"));
 
             }else{
                 this.currtPage.show();
@@ -109,8 +112,11 @@ Array.prototype.insert = function (index, item) {
             1: 加载模板列表
             * */
             load_files(true);
+            /*
+             初始化
+             2: toolbar function
+             * */
 
-            this.addPageWith(ImageRadioPage(),0);
 
         },
 
@@ -130,10 +136,14 @@ Array.prototype.insert = function (index, item) {
             /*下一个课程*/
         next:function(){
 
-        }
+        },
+            save:function(){
+                console.log("auto save ppt");
+            }
      }
 })();
 
 $(function(){
     PPT.editInit();
+    //setInterval(PPT.save,60000);
 });

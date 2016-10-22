@@ -5,12 +5,12 @@
  *
  * 语句选择模板
  */
-var TextRadioPage = function(){
+var PageTextRadio = function(){
     var _TextRadioPage =  new NSPPTPage();
     _TextRadioPage.numberOfAnswer = 4;
     _TextRadioPage.scrollDirection = scrollDirectionEnum.vertically;
 
-    _TextRadioPage.editoBottomItem = function(){
+    _TextRadioPage.editorBottomItem = function(){
         var STR_HTML = '';
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
         STR_HTML += '<div class="editorBoxHeader"><span class="ui-icon ui-icon-text"></span><span>题目答案</span></div>';

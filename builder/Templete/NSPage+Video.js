@@ -1,9 +1,9 @@
 /**
  * Created by BOT01 on 16/10/20.
  */
-var VideoPage = function(){
+var PageVideo = function(){
     var _VideoPage = new NSPPTPage();
-    _VideoPage.editoMiddleItem = function(){
+    _VideoPage.editorMiddleItem = function(){
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
         STR_HTML += '<div class="editorBoxHeader"><span class="ui-icon ui-icon-video"></span><span>视频编辑</span></div>';
         STR_HTML += '<div class="editorBoxInner">';

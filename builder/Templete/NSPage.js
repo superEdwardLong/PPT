@@ -56,7 +56,56 @@ var NSPPTPage = function(){
     this.imageUpload = ImageUpload;
     this.soundUpload = SoundUpload;
     this.videoUpload = VideoUpload;
-    this.editoTopItem = function(){
+    this.getColorPickerHTML = function(IsNeedHighLight){
+        ///试色器
+        var STR_HTML ="";
+        STR_HTML += '<div class="color_picker_rect">';
+            STR_HTML += '<div class="color_picker_option"> ' +
+                '<span><a href="javascript:void(0)" data-type="button" data-theme="green">背景色</a><i></i></span> ' +
+                '<span><a href="javascript:void(0)" data-type="button" data-theme="gray">文字色</a><i></i></span>';
+                    if(IsNeedHighLight){
+                        STR_HTML +='<span><a href="javascript:void(0)" data-type="button" data-theme="gray">高显色</a><i></i></span>'
+                    }
+            STR_HTML +='</div>';
+
+            STR_HTML += '<div class="color_picker_slider">' +
+                '<label><strong>透明度</strong><input type="range" min="0" max="100" name="color_alpha"/> <i>0%</i></label>' +
+                '<label><strong>红</strong><input type="range" min="0" max="255" name="color_r"/> </label>' +
+                '<label><strong>绿</strong><input type="range" min="0" max="255" name="color_g"/> </label>' +
+                '<label><strong>蓝</strong><input type="range" min="0" max="255" name="color_b"/> </label>' +
+                '</div>';
+
+            STR_HTML += '<div class="color_picker_list">';
+            for(var i=0; i< this.colors.length; i++){
+                STR_HTML +='<span style="background-color:rgba('+this.colors[i].r+','+this.colors[i].g+','+this.colors[i].b+','+this.colors[i].alpha+')"> </span>';
+            }
+            STR_HTML +='</div>';
+        STR_HTML += '</div>';
+        return STR_HTML;
+    };
+    this.colors  = [
+        {r:255,g:255,b:255,alpha:1},
+        {r:255,g:204,b:0,alpha:1},
+        {r:255,g:153,b:0,alpha:1},
+        {r:255,g:102,b:0,alpha:1},
+        {r:255,g:51,b:0,alpha:1},
+        {r:255,g:255,b:102,alpha:1},
+        {r:255,g:204,b:102,alpha:1},
+        {r:255,g:102,b:102,alpha:1},
+        {r:255,g:51,b:102,alpha:1},
+        {r:0,g:255,b:0,alpha:1},
+        {r:0,g:204,b:0,alpha:1},
+        {r:0,g:153,b:0,alpha:1},
+        {r:0,g:102,b:0,alpha:1},
+        {r:0,g:51,b:0,alpha:1},
+        {r:0,g:255,b:204,alpha:1},
+        {r:0,g:204,b:204,alpha:1},
+        {r:0,g:153,b:204,alpha:1},
+        {r:0,g:102,b:204,alpha:1},
+        {r:0,g:51,b:204,alpha:1},
+        {r:0,g:0,b:0,alpha:1}
+    ];
+    this.editorTopItem = function(){
         var STR_HTML = "";
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
         STR_HTML += '<div class="editorBoxHeader"><span class="ui-icon ui-icon-sound"></span><span>语音编辑</span></div>';
@@ -85,11 +134,11 @@ var NSPPTPage = function(){
         STR_HTML += '</div>';
         return STR_HTML;
     };
-    this.editoMiddleItem = function(){
+    this.editorMiddleItem = function(){
         var STR_HTML = "";
         return STR_HTML;
     };
-    this.editoBottomItem = function(){
+    this.editorBottomItem = function(){
         var STR_HTML = "";
         return STR_HTML;
     };

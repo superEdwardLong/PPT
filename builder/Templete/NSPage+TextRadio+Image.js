@@ -3,8 +3,8 @@
  * 图文选择模版
  * 图片为题目，做背景
  */
-var TextRadioImagePage = function(){
-    var _TextRadioImagePage = TextRadioPage();
+var PageTextRadioImage = function(){
+    var _TextRadioImagePage = PageTextRadio();
     _TextRadioImagePage.editorMiddleItem = function(){
         var STR_HTML = "";
 

@@ -1,9 +1,9 @@
 /**
  * Created by BOT01 on 16/10/20.
  */
-var PinYinPage = function(){
-    var _PinYinPage = TextRadioPage();
-    _PinYinPage.editoMiddleItem = function(){
+var PagePinYin = function(){
+    var _PinYinPage = PageTextRadio();
+    _PinYinPage.editorMiddleItem = function(){
         var fonts = ['超大字号','大字号','中字号','小字号','微小字号'];
         var STR_HTML = '';
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
@@ -20,4 +20,6 @@ var PinYinPage = function(){
         return STR_HTML;
     };
     _PinYinPage.numberOfAnswer = 2;
+
+    return _PinYinPage;
 }
