@@ -7,6 +7,7 @@
  */
 var PageTextRadio = function(){
     var _TextRadioPage =  new NSPPTPage();
+    _TextRadioPage.name = "PageTextRadio";
     _TextRadioPage.numberOfAnswer = 4;
     _TextRadioPage.scrollDirection = scrollDirectionEnum.vertically;
 

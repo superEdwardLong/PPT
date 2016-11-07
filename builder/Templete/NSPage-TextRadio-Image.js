@@ -5,6 +5,7 @@
  */
 var PageTextRadioImage = function(){
     var _TextRadioImagePage = PageTextRadio();
+    _TextRadioImagePage.name = "PageTextRadioImage";
     _TextRadioImagePage.editorMiddleItem = function(){
         var STR_HTML = "";
 

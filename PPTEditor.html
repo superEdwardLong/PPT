@@ -9,11 +9,15 @@
     <meta name="format-detection" content="telephone=no" />
     <meta charset="UTF-8">
     <title>屁屁体</title>
-    <!--[if lt IE 10]><script type="text/javascript" src="builder/jquery-1.9.0.min.js"></script><![endif]-->
-    <!--[if (gt IE 9)|!(IE)]><!-->
-    <script type="text/javascript" src="builder/jquery-2.2.0.min.js"></script> <!--<![endif]-->
     <link rel="stylesheet" href="dist/css/layout.css" />
     <link rel="stylesheet" href="dist/css/UI-Form.css" />
+    <link rel="stylesheet" href="builder/layer/layer.css" />
+
+    <script type="text/javascript" src="builder/jquery-2.2.0.min.js"></script>
+    <script type="text/javascript" src="builder/Class_lib.js"></script>
+    <script type="text/javascript" src="builder/IndexedDB/jquery.indexedDB.js"></script>
+    <script type="text/javascript" src="builder/IndexedDB/Zngoo.IndexedDB.js"></script>
+    <script type="text/javascript" src="builder/layer/layer.js"></script>
 </head>
 <body>
 <header>
@@ -22,13 +26,13 @@
         <div class="headerInnerContent">
             <ul class="headerInnerToolbar">
                 <li><span class="headerToolbarItem redFont_H1" >创建幻影片</span></li>
-                <li ><a class="headerToolbarItem" href="javascript:void(0)" data-state="selected"><span class="ui-icon ui-icon-create"></span>新建一页<span class="ui-icon ui-icon-arrowDown"></span></a></li>
-                <li><a class="headerToolbarItem" href="javascript:void(0)"><span class="ui-icon ui-icon-copy"></span>复制当前页</a></li>
-                <li><a class="headerToolbarItem" href="javascript:void(0)"><span class="ui-icon ui-icon-music"></span>背景音乐<span class="ui-icon ui-icon-arrowDown"></span></a></li>
-                <li><a class="headerToolbarItem" href="javascript:void(0)"><span class="ui-icon ui-icon-preview"></span>预览</a></li>
+                <li ><a class="headerToolbarItem" href="javascript:void(0)" onclick="AddPage()"><span class="ui-icon ui-icon-create"></span>新建一页<span class="ui-icon ui-icon-arrowDown"></span></a></li>
+                <li><a class="headerToolbarItem" href="javascript:void(0)" onclick="CopyPage()"><span class="ui-icon ui-icon-copy"></span>复制当前页</a></li>
+                <li><a class="headerToolbarItem" href="javascript:void(0)" onclick="ShowBackgroundMusicOption()"><span class="ui-icon ui-icon-music"></span>背景音乐<span class="ui-icon ui-icon-arrowDown"></span></a></li>
+                <li><a class="headerToolbarItem" href="javascript:void(0)" onclick="PreView()"><span class="ui-icon ui-icon-preview"></span>预览</a></li>
             </ul>
         </div>
-        <a href="javascript:void(0)" class="ui-button">提交</a>
+        <a href="javascript:void(0)" class="ui-button" onclick="SubmitPPT()">提交</a>
     </div>
     <section style="display: none">
         <ul class="sectionToolbar">
@@ -62,7 +66,9 @@
                 <div class="pageControllerHeader"><span>NO.</span> <span>预览图</span></div>
                 <div class="pageControllerInner">
                     <ol>
-                        <li data-state="selected"> <canvas id="thumbnail_1" width="300" height="168"> </canvas> </li>
+                        <!--
+                            缩略图工作区域
+                        -->
                     </ol>
                 </div>
             </div>

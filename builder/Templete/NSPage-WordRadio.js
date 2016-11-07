@@ -3,6 +3,7 @@
  */
 var PageWordRadio = function(){
     var _WordRadioPage = new NSPPTPage();
+    _WordRadioPage.name = "PageWordRadio";
     _WordRadioPage.scrollDirection = scrollDirectionEnum.horizontally;
     _WordRadioPage.editorMiddleItem = function(){
         ///// 颜色编辑器

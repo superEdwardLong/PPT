@@ -1,14 +1,26 @@
 /**
  * Created by BOT01 on 16/10/20.
+ * 语音+文字
+ * 图片为小图标
  */
-/**
- * Created by BOT01 on 16/10/20.
- * 语音 + 图片
- * 图片作为背景
- */
-var PageSoundAndImage = function(){
-    var _SoundAndImage =  new NSPPTPage();
-    _SoundAndImage.editorMiddleItem = function(){
+var PageSoundAndText = function(){
+    var _SoundAndTextPage = new NSPPTPage();
+    _SoundAndTextPage.name ="PageSoundAndText";
+    _SoundAndTextPage.editorMiddleItem = function(){
+        var STR_HTML = "";
+        STR_HTML += '<div class="editorBox" data-theme="allBoder">';
+        STR_HTML += '<div class="editorBoxHeader"><span class="ui-icon ui-icon-text"></span><span>题目文字</span></div>';
+        STR_HTML += '<div class="editorBoxInner">';
+        STR_HTML += '<textarea placeholder="10字以内"></textarea>';
+        STR_HTML += '</div>';
+
+        ///试色器
+        STR_HTML += this.getColorPickerHTML();
+
+        STR_HTML += '</div>';
+        return STR_HTML;
+    };
+    _SoundAndTextPage.editorBottomItem = function(){
         var STR_HTML = "";
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
         STR_HTML += '<div class="editorBoxHeader"><span class="ui-icon ui-icon-image"></span><span>图片编辑</span></div>';
@@ -25,21 +37,6 @@ var PageSoundAndImage = function(){
         STR_HTML += '</div>';
         STR_HTML += '</div>';
         return STR_HTML;
-    };
-    _SoundAndImage.editorBottomItem = function(){
-        var STR_HTML = "";
-        STR_HTML += '<div class="editorBox" data-theme="allBoder">';
-        STR_HTML += '<div class="editorBoxHeader"><span class="ui-icon ui-icon-text"></span><span>题目文字</span></div>';
-        STR_HTML += '<div class="editorBoxInner">';
-        STR_HTML += '<textarea placeholder="10字以内"></textarea>';
-        STR_HTML += '</div>';
-
-        ///试色器
-        STR_HTML += this.getColorPickerHTML();
-
-        STR_HTML += '</div>';
-        return STR_HTML;
-
-    };
-    return _SoundAndImage;
+    }
+    return _SoundAndTextPage;
 }

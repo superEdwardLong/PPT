@@ -25,6 +25,7 @@ NSObject.prototype = {
     editor : function(superView){
         //编辑器
     },
+
     didShowEnding : function(superClass){
         //展示结束
         if(superClass && superClass.hasOwnProperty("next")){
@@ -43,12 +44,18 @@ NSObject.prototype = {
     },
     copy:function(){
 
+    },
+    adapter:function(dataSource){
+    },
+    reverseAdapter:function(){
     }
 };
 
 
 ///// 课件页面
 var NSPPTPage = function(){
+    this.name = null;
+    this.dataSource = null; //数据源
     this.backgroundColor = null; //背景颜色
     this.subjectTitle = null;//题目主题
     this.answer = null; //答案
@@ -105,6 +112,34 @@ var NSPPTPage = function(){
         {r:0,g:51,b:204,alpha:1},
         {r:0,g:0,b:0,alpha:1}
     ];
+    this.thumbnail = {
+        addAtPageIndex:function(pageIndex,pageData,superView){
+            var _now = (new Date()).getTime();
+            var _canvasId = "Canvas_"+_now;
+            var _item ='<li> <canvas id="'+_canvasId+'" width="300" height="168"> </canvas> </li>';
+            var _currentItem = superView.find("li").eq(pageIndex);
+
+            if(_currentItem.size() == 0){
+                superView.append(_item);
+            }else{
+                _currentItem.before(_item);
+            }
+
+            /*绘制预览图*/
+            this.draw(pageData,_canvasId);
+
+        },
+        list:function (arr,superView){
+            for(var i=0; i< arr.length;i++){
+                this.addAtPageIndex(i,arr[i],superView);
+            }
+        },
+        draw:function(pageData,canvasId){
+            if(pageData && canvasId){
+                console.log("== 绘制缩略图 ==");
+            }
+        }
+    };
     this.editorTopItem = function(){
         var STR_HTML = "";
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
@@ -157,3 +192,33 @@ var NSPPTPage = function(){
     }
 }
 NSPPTPage.prototype = new NSObject();
+
+
+
+/*==================================
+* 幻灯片类
+*
+*
+*
+*================================== */
+var SlidePage = function(){
+    var _SlidePage = new NSPPTPage();
+    _SlidePage.name = "SlidePage";
+    _SlidePage.editorTopItem = function(){
+        var STR_HTML = "";
+        STR_HTML += '<div class="editorBox" data-theme="allBoder">';
+        STR_HTML += '<!-- 画布工作区-->';
+        STR_HTML += '<div class="editorBoxInner"><canvas id="canvas_workspace" width="720" height="405"> </canvas></div>';
+        STR_HTML += '<!-- 自定义操作区-->';
+        STR_HTML += '<div class="editorBoxInner">';
+        STR_HTML += '<ul class="tab_bar"> <li>贴图</li> <li>文字</li> </ul>';
+        STR_HTML += '<ul class="tab_content"> <li>贴图</li> <li>文字</li> </ul>';
+        STR_HTML += '</div>';
+        STR_HTML += '</div>';
+        return STR_HTML;
+    };
+    _SlidePage.thumbnail.draw = function(pageData,canvasId){
+
+    }
+    return _SlidePage;
+}

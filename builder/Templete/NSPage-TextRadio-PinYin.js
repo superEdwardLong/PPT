@@ -3,6 +3,7 @@
  */
 var PagePinYin = function(){
     var _PinYinPage = PageTextRadio();
+    _PinYinPage.name = "PagePinYin";
     _PinYinPage.editorMiddleItem = function(){
         var fonts = ['超大字号','大字号','中字号','小字号','微小字号'];
         var STR_HTML = '';

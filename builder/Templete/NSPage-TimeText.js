@@ -3,6 +3,7 @@
  */
 var PageTimeText = function(){
     var _TimeTextPage = new NSPPTPage();
+    _TimeTextPage.name = "PageTimeText";
     _TimeTextPage.editorMiddleItem = function(){
         var fonts = ['超大字号','大字号','中字号','小字号','微小字号'];
         var STR_HTML = "";

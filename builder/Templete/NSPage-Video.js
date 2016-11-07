@@ -3,7 +3,9 @@
  */
 var PageVideo = function(){
     var _VideoPage = new NSPPTPage();
+    _VideoPage.name = "PageVideo";
     _VideoPage.editorMiddleItem = function(){
+        var STR_HTML = "";
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
         STR_HTML += '<div class="editorBoxHeader"><span class="ui-icon ui-icon-video"></span><span>视频编辑</span></div>';
         STR_HTML += '<div class="editorBoxInner">';
@@ -25,6 +27,7 @@ var PageVideo = function(){
         STR_HTML += '</table>';
         STR_HTML += '</div>';
         STR_HTML += '</div>';
+        return STR_HTML;
     };
     _VideoPage.editor = function(superView){
         var STR_HTML = "<audio id='editor_audio' class='editor_audio'> </audio><form name='PageUploadForm' id='PageUploadForm' method='post' enctype='multipart/form-data'> <input type='file' value=''  /> </form>";

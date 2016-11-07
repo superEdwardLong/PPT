@@ -7,7 +7,7 @@
     var _dbName = "PPT_IndexDB";
 
     /*创建数据库表*/
-    function CreateTables(tableNameArr,sortKeyArr,callback){
+    function CreateTables(tableArr,callback){
         if(indexedDB == null){
             alert("不支持IndexedDB");
             return;
@@ -16,23 +16,20 @@
         $.indexedDB(_dbName, {
             "schema": {
                 1: function(versionTransaction){
-                    if(tableNameArr instanceof Array){
-                        for(var i=0; i< tableNameArr.length;i++){
-                            var item = versionTransaction.createObjectStore(tableNameArr[i], {
+                    if(tableArr instanceof Array){
+                        for(var i=0; i< tableArr.length;i++){
+                            var item = versionTransaction.createObjectStore(tableArr[i].tableName, {
                                 "autoIncrement": true,
                                 "keyPath":"uid"
                             });
-                            item.createIndex(sortKeyArr[i]);
+                            item.createIndex(tableArr[i].orderBy);
                             //console.log("Created new object store ["+tableNameArr[i]+"]");
                         }
                     }
-                    if(callback){
-                        callback.call(this);
-                    }
                 }
             }
-        });
-    }
+        }).then(callback,console.error);
+    };
 
     /*表:添加一条记录*/
     function InsertInto(table,itemStore,callback){
@@ -45,25 +42,34 @@
 
     /*表:移除条件相符的记录*/
     function Delete(table,removeItem,callback){
-        var _do;
-        $.indexedDB(_dbName).objectStore(table).each(function (elem) {
-            if(elem.value && removeItem){
-                _do = true;
-                for(var item in removeItem){
-                    if(removeItem[item] != elem.value[item]){
-                        _do = false;
+        var promise  = $.indexedDB(_dbName).objectStore(table).count();
+        promise.done = function(count,event){
+            var _do;
+            var _rowNumber = count;
+            $.indexedDB(_dbName).objectStore(table).each(function (elem) {
+                _rowNumber--;
+
+                if(elem.value && removeItem){
+                    _do = true;
+                    for(var item in removeItem){
+                        if(removeItem[item] != elem.value[item]){
+                            _do = false;
+                        }
                     }
-                }
-                if(_do){
-                    elem["delete"]();
-                    if(callback){
+                    if(_do){
+                        elem["delete"]();
+                    }
+
+                    if(typeof callback == "function" && _rowNumber == 0){
                         callback.call(this);
                     }
                     return true;
                 }
-            }
-        });
+            });
+        }
     }
+
+
 
     /*表: 更新一条记录
     * @put: 会自动替换主键相同的objectStore 没有则添加
@@ -89,27 +95,34 @@
     /*表: 查找N条记录
      * */
     function FindAll(table,findItem,itemSort,callback){
-        var items = [];
-        var count = $.indexedDB(_dbName).objectStore(table).count();
-        var rowNumber = 0;
-        var _do;
-        $.indexedDB(_dbName).objectStore(table).index(itemSort).each(function (elem) {
-            rowNumber++;
-            if(elem.value && findItem){
-                _do = true;
-                for(var attr in findItem){
-                    if(findItem[attr] != elem.value[attr]){
-                        _do = false;
+        var _promise  = $.indexedDB(_dbName).objectStore(table).count();
+        _promise.done(function(count, event){
+            var _items = [];
+            var _rowNumber = count;
+            var _do;
+            if(_rowNumber == 0 && typeof callback == "function"){
+                callback(_items);
+            }else if(_rowNumber > 0 && typeof callback == "function"){
+                $.indexedDB(_dbName).objectStore(table).index(itemSort).each(function (elem) {
+                    _rowNumber--;
+                    if(elem.value && findItem){
+                        _do = true;
+                        for(var attr in findItem){
+                            if(findItem[attr] != elem.value[attr]){
+                                _do = false;
+                            }
+                        }
+                        if(_do){
+                            _items.push(elem);
+                        }
                     }
-                }
-                if(_do){
-                    items.push(elem);
-                }
-            }
-            if(rowNumber == count){
-                callback(items);
-            }
+                    //循环完成
+                    if(_rowNumber == 0){
+                        callback(_items);
+                    }
 
+                });
+            }
         });
     }
 
@@ -125,7 +138,7 @@
 
     }
 
-   window["PPTDb"] = {
+   window["PPTDatabase"] = {
        name: _dbName,
        clear:ClearTabel,
        init: CreateTables,

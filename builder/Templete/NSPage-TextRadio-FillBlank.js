@@ -3,6 +3,7 @@
  */
 var PageFillBlank = function(){
     var _FillBlanPage = PageTextRadio();
+    _FillBlanPage.name = "PageFillBlank";
     _FillBlanPage.editorMiddleItem = function(){
         var STR_HTML = "";
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';

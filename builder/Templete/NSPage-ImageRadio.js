@@ -3,6 +3,7 @@
  */
 var PageImageRadio = function(){
     var _ImageRadioPage =  new NSPPTPage();
+    _ImageRadioPage.name = "PageImageRadio";
     _ImageRadioPage.editorMiddleItem = function(){
         var STR_HTML = '';
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
