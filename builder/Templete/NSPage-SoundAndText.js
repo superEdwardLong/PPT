@@ -1,6 +1,6 @@
 /**
  * Created by BOT01 on 16/10/20.
- * 语音+文字
+ * 语音 +大文字
  * 图片为小图标
  */
 var PageSoundAndText = function(){
@@ -37,6 +37,28 @@ var PageSoundAndText = function(){
         STR_HTML += '</div>';
         STR_HTML += '</div>';
         return STR_HTML;
+    };
+    _SoundAndTextPage.setEditValue = function(pageData){
+        var _super = this;
+        if(pageData){
+            if(pageData.pageOptions.sounds instanceof Array && pageData.pageOptions.sounds.length > 0){
+                var STR_HTML = '';
+                for(var i=0; i< pageData.pageOptions.sounds.length; i++){
+                    STR_HTML += "<li>"+_super.get_HTML_SoundItem(pageData.pageOptions.sounds[i])+"</li>";
+                }
+                $(".editorSoundList").append(STR_HTML);
+            }
+            //页面图标
+            if(pageData.pageIcon){
+                $(".dashedRect").append("<div class='imgRect' style='background-image: url("+pageData.pageIcon+")'></div>");
+            }
+
+            //文字
+            if(pageData.pageText){
+                $("textarea").val(pageData.pageText.textContent);
+                _super.setColorPickerValue($(".color_picker_rect"),pageData.pageText);
+            }
+        }
     }
     return _SoundAndTextPage;
 }

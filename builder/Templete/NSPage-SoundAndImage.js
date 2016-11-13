@@ -42,5 +42,53 @@ var PageSoundAndImage = function(){
         return STR_HTML;
 
     };
+    _SoundAndImage.setEditValue = function(pageData){
+        var _super = this;
+        if(pageData){
+            //配音
+            if(pageData.pageOptions.sounds instanceof Array && pageData.pageOptions.sounds.length > 0){
+                var STR_HTML = '';
+                for(var i=0; i< pageData.pageOptions.sounds.length; i++){
+                    STR_HTML += "<li>"+_super.get_HTML_SoundItem(pageData.pageOptions.sounds[i])+"</li>";
+                }
+                $(".editorSoundList").append(STR_HTML);
+            }
+            //背景图
+            if(pageData.pageBackgroundImage){
+                $(".dashedRect").append("<div class='imgRect' style='background-image: url("+pageData.pageBackgroundImage+")'></div>");
+            }
+            //文字
+            if(pageData.pageText){
+                $("textarea").val(pageData.pageText.textContent);
+                //默认背景色
+                if(pageData.pageText.textBackgroundColor instanceof Array){
+                    var _selectedInList = false;
+                    var _colorCode = pageData.pageText.textBackgroundColor[0] +
+                        pageData.pageText.textBackgroundColor[1] +
+                        pageData.pageText.textBackgroundColor[2];
+
+                    $(".color_picker_list span").each(function(index,element){
+                       if(element.attr("data-code") ==  _colorCode){
+                           _selectedInList = true;
+                           element.trigger("click");
+                           return false;
+                       }
+                    });
+
+                    //如果选中的颜色不在推荐列表中
+                    if(_selectedInList == false){
+                        $(".color_picker_slider input").each(function(index,element){
+                            if(index == 0){
+                                element.val(pageData.pageText.textBackgroundColor[3]*100);
+                            }else{
+                                element.val(pageData.pageText.textBackgroundColor[index-1]);
+                            }
+                        });
+                    }
+                }
+            }
+
+        }
+    }
     return _SoundAndImage;
 }

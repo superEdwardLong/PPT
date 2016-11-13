@@ -8,12 +8,20 @@ var PageFillBlank = function(){
         var STR_HTML = "";
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
         STR_HTML += '<div class="editorBoxInner fillBlankBox">';
-        STR_HTML += '<div><input type="text" value="" placeholder="请输入问题前部分" class="ui-textfield"/></div>';
+        STR_HTML += '<div><input type="text" value="" placeholder="请输入问题前部分" class="ui-textfield" name="textPartA"/></div>';
         STR_HTML += '<div><span>填空区</span></div>';
-        STR_HTML += '<div><input type="text" value="" placeholder="请输入问题后部分" class="ui-textfield"/></div>';
+        STR_HTML += '<div><input type="text" value="" placeholder="请输入问题后部分" class="ui-textfield" name="textPartB"/></div>';
         STR_HTML += '</div>';
         STR_HTML += '</div>';
         return STR_HTML;
     };
+    _FillBlanPage.setEditSubject = function(pageData){
+        if(pageData.pageText && typeof pageData.pageText == "string"){
+            var textItems = pageData.pageText.split(",");
+            $("input[name=textPartA]").val(textItems[0]);
+            $("input[name=textPartB]").val(textItems[1]);
+        }
+    };
+
     return _FillBlanPage;
 }

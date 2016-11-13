@@ -6,6 +6,7 @@
 var PageTextRadioImage = function(){
     var _TextRadioImagePage = PageTextRadio();
     _TextRadioImagePage.name = "PageTextRadioImage";
+    _TextRadioImagePage.scrollDirection = scrollDirectionEnum.horizontally;
     _TextRadioImagePage.editorMiddleItem = function(){
         var STR_HTML = "";
 
@@ -26,5 +27,11 @@ var PageTextRadioImage = function(){
         return STR_HTML;
 
     };
+    _TextRadioImagePage.setEditSubject = function(pageData){
+        if(pageData.pageBackgroundImage){
+            $(".dashedRect").append("<div class='imgRect' style='background-image: url("+pageData.pageBackgroundImage+")'></div>");
+        }
+    }
+
     return _TextRadioImagePage;
 }

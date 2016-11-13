@@ -10,7 +10,6 @@ var PageTextRadio = function(){
     _TextRadioPage.name = "PageTextRadio";
     _TextRadioPage.numberOfAnswer = 4;
     _TextRadioPage.scrollDirection = scrollDirectionEnum.vertically;
-
     _TextRadioPage.editorBottomItem = function(){
         var STR_HTML = '';
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
@@ -21,16 +20,14 @@ var PageTextRadio = function(){
         for(var i=0; i< this.numberOfAnswer;i++){
             STR_HTML += '<li> <input type="text" value="" class="ui-textfield" placeholder="请输入答案"/> ' +
                 '<a href="javascript:void(0)" data-type="button" data-theme="green">配音 </a> ' +
-                '<a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="green">' +
-                '<span class="ui-icon ui-icon-soundWave "></span>58s</a> ' +
                 '</li>';
         };
         STR_HTML += '</ol>';
         STR_HTML += '</div>';
         STR_HTML += '<div class="editorBoxFooter">';
-        STR_HTML += '<label>√ 正确答案 <input type="text" value="" class="ui-textfield" placeholder="答案"/></label>';
+        STR_HTML += '<label>√ 正确答案 <input type="text" value="" class="ui-textfield" placeholder="答案" name="anwser"/></label>';
         STR_HTML += '<a href="javascript:void(0)" data-type="button" data-theme="green">配音 </a>';
-        STR_HTML += '<a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="green"><span class="ui-icon ui-icon-soundWave "></span>58s</a>';
+        //STR_HTML += '<a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="green"><span class="ui-icon ui-icon-soundWave "></span>58s</a>';
         STR_HTML += '</div>';
         STR_HTML += '</div>';
         return STR_HTML;
@@ -45,6 +42,58 @@ var PageTextRadio = function(){
         STR_HTML += '</div>';
         STR_HTML += '</div>';
         return STR_HTML;
+    };
+
+    _TextRadioPage.setEditSubject = function(pageData){
+        if(pageData.pageText && typeof pageData.pageText == "string"){
+            $("textarea").val(pageData.pageText);
+        }
+    };
+
+    _TextRadioPage.setEditValue = function(pageData){
+        var _super = this;
+        if(pageData){
+            //问题
+            if(typeof _super.setEditSubject == "function"){
+                _super.setEditSubject(pageData);
+            }
+
+            //配音
+            if(pageData.pageOptions.sounds instanceof Array && pageData.pageOptions.sounds.length > 0){
+                var STR_HTML = '';
+                for(var i=0; i< pageData.pageOptions.sounds.length; i++){
+                    STR_HTML += "<li>"+_super.get_HTML_SoundItem(pageData.pageOptions.sounds[i])+"</li>";
+                }
+                $(".editorSoundList").append(STR_HTML);
+            }
+
+
+            //选项
+            if(pageData.pageOptions.texts instanceof Array && pageData.pageOptions.texts.length > 0){
+                var editItem;
+                for(var i=0; i< pageData.pageOptions.texts.length; i++){
+                    editItem = $(".editorTextQuestionList li").eq(pageData.pageOptions.texts[i].textSort);
+                    editItem.find("input").val(pageData.pageOptions.texts[i].textContent);
+                    if(pageData.pageOptions.texts[i].textBackgroundSound){
+                        var Sound_HTML = _super.get_HTML_SoundItem(pageData.pageOptions.texts[i].textBackgroundSound);
+                        editItem.find("a:last").after(Sound_HTML);
+                    }
+                }
+            }
+
+            //答案
+            if(pageData.pageAnswer.answer){
+                $("input[name=answer]").val(pageData.pageAnswer.answer);
+                if(pageData.pageAnswer.sounds instanceof Array && pageData.pageAnswer.sounds.length > 0){
+                    var Sound_HTML ="";
+                    for(var i=0; i< pageData.pageAnswer.sounds.length; i++){
+                        Sound_HTML += _super.get_HTML_SoundItem(pageData.pageAnswer.sounds[i]);
+                    }
+                    $(".editorBoxFooter a:last").after(Sound_HTML);
+                }
+            }
+
+        }
     }
     return _TextRadioPage;
 }

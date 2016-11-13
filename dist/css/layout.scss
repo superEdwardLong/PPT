@@ -144,19 +144,29 @@ input{
   background-image:url(../Images/ui-loading.gif);
 }
 
+.imageOptionsItem,
 .soundOptionsItem{
-  width:6.75rem; height: 6.75rem;display: block;
-  border: solid 1px #d0d0d0; margin: 0 2rem 2rem 0;
-  position: relative; overflow: hidden;
-  background-repeat: no-repeat;
-  background-image: url(../Images/ui-icon-sound.png);
-  background-position: center 20%;
-  @include radius(16%);
- span{
-   display: block; position: absolute;
-   z-index: 10; left: 5%; right: 5%; bottom: 15%; text-align: center;
-   color:#666}
+    width:6.75rem; height: 6.75rem;display: block;
+    border: solid 1px #d0d0d0; margin: 0 2rem 2rem 0;
+    position: relative; overflow: hidden;
+    background-repeat: no-repeat;
+    background-image: url(../Images/ui-icon-sound.png);
+    background-position: center 20%;
+    background-size: auto 50%;
+    background-color: #fff;
+    @include radius(16%);
+   span{
+     display: block; position: absolute;
+     z-index: 10; left: 5%; right: 5%; bottom: 15%; text-align: center;
+     color:#666
+   }
+
 }
+.imageOptionsItem{
+  background-position: center 25%;
+  background-size: auto 75%;
+}
+.imageOptionsItem:after,
 .soundOptionsItem:after{
   display: block;
   content: '';
@@ -165,11 +175,55 @@ input{
   bottom:10%;
   left: 0;
   right: 0;
-  background-color: #fff;
+
   @include radius(14%);
   @include  shadow(0, 0.5rem ,1rem ,#E2E2E2);
-  z-index: -1;
+
 }
+
+.sectionOptions{
+  li{ float: left;}
+  li[data-state=selected]{
+    .imageOptionsItem,
+    .soundOptionsItem{
+      border-color: #ef455f; background-color: white;
+    }
+    .imageOptionsItem:after,
+    .soundOptionsItem:after{
+      right: 8%;
+      bottom: 8%;
+      top: 80%;
+      left: 85%;
+      border-style: solid;
+      border-width: 1px;
+      border-color: transparent #ffffff #ffffff transparent;
+      background-color:transparent;
+      @include radius(0);
+      @include  shadow(0, 0 ,0,transparent);
+      @include transform(rotate(35deg));
+      z-index: 2;
+    }
+    .imageOptionsItem:before,
+    .soundOptionsItem:before{
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 1.2rem;
+      border-color:transparent #ef455f #ef455f transparent;
+      content: '';
+      display: block;
+      bottom: 0;
+      right: 0;
+      position: absolute;
+      z-index: 1;
+    }
+  }
+}
+
+
+
+
+
 
 audio, #PageUploadForm{
   display: none; 
@@ -197,41 +251,7 @@ header{
       li:hover{  color:#ef455f; border-bottom: solid 2px #ef455f; }
 
     }
-    .sectionOptions{
-      li{ float: left}
-      li[data-state=selected]{
-        .soundOptionsItem{
-          border-color: #ef455f;
-        }
-        .soundOptionsItem:after{
-          right: 8%;
-          bottom: 8%;
-          top: 80%;
-          left: 85%;
-          border-style: solid;
-          border-width: 1px;
-          border-color: transparent #ffffff #ffffff transparent;
-          background-color:transparent;
-          @include radius(0);
-          @include  shadow(0, 0 ,0,transparent);
-          @include transform(rotate(35deg));
-          z-index: 2;
-        }
-        .soundOptionsItem:before{
-          width: 0;
-          height: 0;
-          border-style: solid;
-          border-width: 1.2rem;
-          border-color:transparent #ef455f #ef455f transparent;
-          content: '';
-          display: block;
-          bottom: 0;
-          right: 0;
-          position: absolute;
-          z-index: 1;
-        }
-      }
-    }
+
   }
   .headerInner{
     width:73.125rem; height:3.75rem;
@@ -318,6 +338,125 @@ header{
 }
 
 #EditRect{ width: 100%; overflow: hidden; margin-top: 6.625rem; }
+.tab_bar{
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  background-color: #e6eaf3;
+  border: solid 1px #c4cad8;
+  color: #8891a2;
+  ul{
+    list-style: none;
+    padding: 0; margin: 0; width: 100%;
+    overflow: hidden;
+    li{
+      cursor: pointer;
+      text-align: center;
+      line-height: 2.5rem;
+    }
+
+    li[data-state="selected"]{
+      background-color: #fff;
+      color: #ef4761;
+    }
+    li:hover{
+      background-color: #eff2f7;
+      color: #ef4761;
+    }
+  }
+  .tab_bar_main{
+    @include flexBox;
+    @include flexAlign("v",center);
+    li{
+      -webkit-flex-grow: 1;
+      -moz-box-flex: 1;
+      -ms-flex: 1;
+      flex-grow: 1;
+      -webkit-flex-shrink: 1;
+      flex-shrink: 1;
+      position: relative;
+    }
+    li:nth-child(2n+2):before,
+    li:nth-child(2n+2):after{
+      content: '';
+      display: inline-block;
+      width: 1px;
+      background-color:#c4cad8;
+      position: absolute;
+      top: .6rem;
+      bottom:.6rem;
+    }
+    li:nth-child(2n+2):before{left: 0}
+    li:nth-child(2n+2):after{right:0}
+    li:last-child:after{display: none}
+
+  }
+  .tab_bar_subItem{
+     background-color: white; display: none;
+    li{display: inline-block; padding: 0 .5rem; margin:.5rem; min-width: 3.125rem}
+  }
+}
+
+.tab_content{
+  padding: 0;
+  margin: 1rem 0;
+  display: block;
+  overflow: hidden;
+
+  width: 45rem;
+  ul{
+    list-style-type: none;
+    width: 600%; padding:0; margin: 0;
+    transition: all 0.4s ease-in;
+    li{
+      display:inline-block;
+      vertical-align: top;
+      width: 45rem;
+      overflow: hidden;
+      margin-right: -4px;
+      .tab_content_inner{
+        padding: .5rem 1rem;
+        overflow: hidden;
+        display: block;
+        border:solid 1px #c4cad8;
+        background-color:#e6eaf3;
+        @include radius(.5rem);
+        margin-bottom: 1rem;
+        .tab_content_title{
+          font-weight: bold;
+          line-height: 2.5rem;
+          color: #666;
+        }
+        .sectionOptions{
+          white-space: normal;
+          li{
+            width: 7rem; height: 7rem;
+            margin: .5rem;
+          }
+        }
+
+        .dashedRect{
+          margin: 1rem auto;
+        }
+        .dashedRect +a{
+          margin: .5rem auto;
+          display: block;
+        }
+        .editorBoxToolbar a{
+           margin: .5rem; padding: .5rem; border-bottom: solid 3px transparent;
+        }
+        .editorBoxToolbar a[data-state="selected"],
+        .editorBoxToolbar a:hover{
+          border-bottom: solid 2px #ef4761; color: #ef4761;
+        }
+      }
+    }
+  }
+}
+
+#canvas_workspace{
+  background-color: #e6eaf3; border: solid 1px #c4cad8;
+}
 .editorBox{
   padding: 1rem; background-color: #fff; margin-bottom: 1rem;
   .editorBoxHeader{
@@ -440,7 +579,7 @@ header{
       display: block; margin-bottom: 0.25rem; overflow: hidden;
       strong{ display:inline-block; width: 3rem; vertical-align: top ; font-weight: normal}
       i{ width: 2rem; display: inline-block;vertical-align: top}
-      input{ margin: 0}
+      input{ margin: 0; background-color: transparent}
     }
   }
   .color_picker_list{
@@ -528,6 +667,29 @@ content: ''; display: block; top: 1px; left: 1px; right: 1px; height: 5px ;posit
   @include transform(rotate(45deg));
   transition: all 0.4s ease-in;
 }
+
+.ui-icon-sound2{
+  background-position: -11rem -0.125rem;
+}
+.ui-icon-photo{
+  background-position: -13.25rem -0.125rem;
+}
+.ui-icon-background{
+  background-position: -15.5rem -0.125rem;
+}
+.ui-icon-photo2{
+  background-position: -17.75rem -0.125rem;
+}
+.ui-icon-text3{
+  background-position: -20rem -0.125rem;
+}
+.ui-icon-text2{
+  background-position: -22.25rem -0.125rem;
+}
+
+
+
+
 @mixin icon16_16(){
   background-repeat: no-repeat;
   background-position:center center;
@@ -1008,7 +1170,7 @@ content: ''; display: block; top: 1px; left: 1px; right: 1px; height: 5px ;posit
     }
   }
 }
-
+/*单图  编辑区域*/
 .dashedRect{
   border: dashed 1px #d0d0d0;
   padding: 0.25rem;
@@ -1016,6 +1178,18 @@ content: ''; display: block; top: 1px; left: 1px; right: 1px; height: 5px ;posit
   height: 16.875rem;
   position: relative; overflow: hidden;
   background-color: #fefefe;
+  .imgRect{
+    display: block;
+    position: absolute;
+    left: 0;
+    right:0;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
 }
 .dashedRect:after{
   content: "Image";
@@ -1026,7 +1200,15 @@ content: ''; display: block; top: 1px; left: 1px; right: 1px; height: 5px ;posit
   font-size: 2rem; text-align: center; font-family: Arial;
 
 }
-.blackRect{   width: 30rem; height: 16.875rem; background-color: #000;}
+.blackRect{
+  width: 30rem; height: 16.875rem; background-color: #000;  overflow: hidden;
+  video{
+    width: 30rem; height: 16.875rem;
+
+  }
+}
+
+/*多图  选项编辑*/
 .editorImageRect{
   width: 16rem; height: 9rem; overflow: hidden; margin: 0.5rem; border: solid 1px #d0d0d0; position: relative;
   @include radius(1rem);

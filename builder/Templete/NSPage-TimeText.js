@@ -5,7 +5,6 @@ var PageTimeText = function(){
     var _TimeTextPage = new NSPPTPage();
     _TimeTextPage.name = "PageTimeText";
     _TimeTextPage.editorMiddleItem = function(){
-        var fonts = ['超大字号','大字号','中字号','小字号','微小字号'];
         var STR_HTML = "";
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
         STR_HTML += '<div class="editorBoxToolbar">' +
@@ -20,12 +19,12 @@ var PageTimeText = function(){
 
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
         STR_HTML += '<div class="editorBoxToolbar">'
-        for(var i=0; i< fonts.length; i++){
-            STR_HTML += '<a href="javascript:void(0)" class="font-options-item"> '+fonts[i]+' </a>';
+        for(var i=0; i< this.fontOptions.length; i++){
+            STR_HTML += '<a href="javascript:void(0)" data-size="'+this.fontOptions[i].fontSize+'"> '+this.fontOptions[i].fontName+' </a>';
         }
         STR_HTML +='</div>';
         ///试色器
-        STR_HTML += this.getColorPickerHTML(true);
+        STR_HTML += this.getColorPickerHTML({IsNeedHighLight:true});
         STR_HTML +='</div>';
 
         return  STR_HTML;

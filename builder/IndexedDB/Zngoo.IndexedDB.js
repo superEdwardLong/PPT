@@ -4,7 +4,7 @@
     window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction;
 
     var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || null;
-    var _dbName = "PPT_IndexDB";
+    var _dbName = "PPT_IndexedDB";
 
     /*创建数据库表*/
     function CreateTables(tableArr,callback){

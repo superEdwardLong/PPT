@@ -16,7 +16,7 @@ var PageVideo = function(){
         STR_HTML += '</td>';
         STR_HTML += '<td>';
         STR_HTML += '<div class = "blackRect">';
-
+        STR_HTML += '<video  id="el_video">浏览器版本太旧，不支持video标签</video>'
         STR_HTML += '</div>';
         STR_HTML += '</td>';
         STR_HTML += '<td width="15">';
@@ -45,6 +45,21 @@ var PageVideo = function(){
 
         superView.html(STR_HTML);
     };
+
+    _VideoPage.setEditValue = function(pageData){
+        if(pageData.pageVideo){
+            $("#el_video").attr('src',pageData.pageVideo);
+        }
+
+        //配音
+        if(pageData.pageOptions.sounds instanceof Array && pageData.pageOptions.sounds.length > 0){
+            var STR_HTML = '';
+            for(var i=0; i< pageData.pageOptions.sounds.length; i++){
+                STR_HTML += "<li>"+_super.get_HTML_SoundItem(pageData.pageOptions.sounds[i])+"</li>";
+            }
+            $(".editorSoundList").append(STR_HTML);
+        }
+    }
     return _VideoPage;
 
 }

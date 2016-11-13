@@ -3,7 +3,7 @@
  */
 (function(){
     var _FilePath = ""; /*http://120.24.156.142:9690*/
-    var _ApiPath = "/PPTWebApi/Api/";
+    var _ApiPath = "PPTWebApi/Api/";
     var _sectionKey = "PPTUserData";
 
     /* 用户类

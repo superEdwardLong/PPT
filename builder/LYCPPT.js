@@ -6,6 +6,22 @@ var PPTTypeEnum = {
     slide:0,
     phantom:1
 }
+
+
+var PPTDataStructure = {
+    pptid:0,
+    type:null,           //类型@:幻灯片 ,@:幻影片
+    title : null,       //主题
+    cover : null,       //封面
+    backgroundSound:null,//背景音乐
+    detail : null,      //详情
+    author : null,      //作者
+    dateTime : null,    //发布时间
+    collection : 0,     //收藏次数
+    reads : 0,
+    pages:[]
+}
+
 Array.prototype.insert = function (index, item) {
     this.splice(index, 0, item);
 };
@@ -57,8 +73,9 @@ Array.prototype.insert = function (index, item) {
                  {name:"注音选择题",path:"builder/Templete/NSPage-TextRadio-PinYin.js",fn:"PagePinYin"},
                  {name:"文字选择题",path:"builder/Templete/NSPage-WordRadio.js",fn:"PageWordRadio"}
              ]
-         },
-         pptid:0,
+         },uid:0,//编辑时的缓存ID
+         pptid:0,//课件ID
+         backgroundSound:null,//背景音乐
          type:null,           //类型@:幻灯片 ,@:幻影片
          title : null,       //主题
          cover : null,       //封面
@@ -66,7 +83,7 @@ Array.prototype.insert = function (index, item) {
          author : null,      //作者
          dateTime : null,    //发布时间
          collection : 0,     //收藏次数
-         tread : 0,          //阅读次数
+         reads : 0,          //阅读次数
          currtPage:null,   //当前页对象
          pages:[],         //页面集合
 
@@ -188,11 +205,13 @@ Array.prototype.insert = function (index, item) {
         save:function(){
             console.log("auto save ppt");
         },
+            //适配为当前的数据结构
         adapter:function(dataSource){
             if(dataSource){
 
             }
         },
+            //适配为数据库接收的数据结构
         reverseAdapter:function(){
 
         }
@@ -278,9 +297,7 @@ $(function(){
             setInterval(PPT.save,times);
         }
     }
-
-
-
+    
     PPTDatabase.init(
         [
             {tableName:"t_PPT",orderBy:"CreateTime"},
