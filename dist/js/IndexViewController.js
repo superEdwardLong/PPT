@@ -41,7 +41,7 @@
         str += '<div class="ItemRowInnerFooter"><div class="ItemShareInfo">';
         str += '<span>' + C_lib.countTime(itemdb.DiffTime, itemdb.CreatedTime) + '  </span>';
         if(itemdb.CategoryID > 0){
-        str += '<span><a href="category.html?Id=' + itemdb.CategoryID + '" title="  ' + itemdb.CategoryName + '"> ' + itemdb.CategoryName + '</a></span>';
+            str += '<span><a href="category.html?Id=' + itemdb.CategoryID + '" title="  ' + itemdb.CategoryName + '"> ' + itemdb.CategoryName + '</a></span>';
         }
         str += '</div>';
 
@@ -62,7 +62,7 @@
     function pullUpAction(){
 
         setTimeout(function (){
-			var maxPageIndex = TurnPageRequest.TotalPage-1;
+            var maxPageIndex = TurnPageRequest.TotalPage-1;
             if (TurnPageRequest.PageIndex == maxPageIndex) return false;
             var  currt = parseInt($(".ItemRow:last").attr('data-page')) +1;
             TurnPageRequest.PageIndex = Math.min(currt,maxPageIndex);
@@ -85,66 +85,71 @@
         },1000);
     }
     function onScrollFn(){
-        
-        if (this.y > 5 && !pullDownEl.className.match('flip')) {
-            pullDownEl.className = 'flip';
-            pullDownEl.querySelector('.pullDownLabel').innerHTML = '松手开始更新...';
-            this.minScrollY = 0;
-        } else if (this.y < 5 && pullDownEl.className.match('flip')) {
-            pullDownEl.className = '';
-            pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
-            this.minScrollY = -pullDownOffset;
-        } else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
-            pullUpEl.className = 'flip';
-            pullUpEl.querySelector('.pullUpLabel').innerHTML = '松手开始更新...';
-            this.maxScrollY = this.maxScrollY;
-        } else if (this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
-            pullUpEl.className = '';
-            pullUpEl.querySelector('.pullUpLabel').innerHTML = '上拉加载更多...';
-            this.maxScrollY = pullUpOffset;
+        if(loadingStep == 1){
+            if (pullUpEl.attr('class').match('flip|loading')) {
+                pullUpEl.removeClass('flip').addClass('loading');
+                pullUpL.html('Loading...');
+                loadingStep = 2;
+                pullUpAction();
+            }else if(pullDownEl.attr('class').match('flip|loading')){
+                pullDownEl.removeClass('flip').addClass('loading');
+                pullDownL.html('Loading...');
+                loadingStep = 2;
+                pullDownAction();
+            }
         }
     }
     function onScrollEnd(){
-        
-        if (pullDownEl.className.match('flip')) {
-            pullDownEl.className = 'loading';
-            pullDownEl.querySelector('.pullDownLabel').innerHTML = '加载中...';
-            pullDownAction();
-        } else if (pullUpEl.className.match('flip')) {
-            pullUpEl.className = 'loading';
-            pullUpEl.querySelector('.pullUpLabel').innerHTML = '加载中...';
-            pullUpAction();
+
+        if(loadingStep == 0 && !pullDownEl.attr('class').match('flip|loading') && !pullUpEl.attr('class').match('flip|loading')){
+            if (this.y > 5) {
+                //下拉刷新效果
+                pullDownEl.attr('class',pullUpEl['class'])
+                pullDownEl.show();
+                myScroll.refresh();
+                pullDownEl.addClass('flip');
+                pullDownL.html('准备刷新...');
+                loadingStep = 1;
+            }else if (this.y < (this.maxScrollY - 5)) {
+                //上拉刷新效果
+                pullUpEl.attr('class',pullUpEl['class'])
+                pullUpEl.show();
+                myScroll.refresh();
+                pullUpEl.addClass('flip');
+                pullUpL.html('准备刷新...');
+                loadingStep = 1;
+            }
         }
     }
-/*
-    function onRefresh(){
-        if (pullDownEl.className.match('loading')) {
-            pullDownEl.className = '';
-            pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
-        } else if (pullUpEl.className.match('loading')) {
-            pullUpEl.className = '';
-            pullUpEl.querySelector('.pullUpLabel').innerHTML = '上拉加载更多...';
-        }
-    }
-*/
-    var pullDownEl,pullDownOffset,pullUpEl,pullUpOffset;
+
+    var pullDownEl, pullDownL;
+    var pullUpEl, pullUpL;
+    var loadingStep = 0;
+
     function initListScroller(){
-        pullDownEl = document.getElementById('pullDown');
-        pullDownOffset = pullDownEl.offsetHeight;
-        pullUpEl = document.getElementById('pullUp');
-        pullUpOffset = pullUpEl.offsetHeight;
+
+        pullDownEl = $('#pullDown');
+        pullDownL = pullDownEl.find('.pullDownLabel');
+        pullDownEl['class'] = pullDownEl.attr('class');
+        pullDownEl.attr('class','').hide();
+
+        pullUpEl = $('#pullUp');
+        pullUpL = pullUpEl.find('.pullUpLabel');
+        pullUpEl['class'] = pullUpEl.attr('class');
+        pullUpEl.attr('class','').hide();
+
 
         indexViewController.contentScroller = new IScroll('#list-inner', {
-            probeType:2,
-            topOffset: pullDownOffset,
-            mouseWheel:true,
-			scrollbars: true,//滚动条可见
-            fadeScrollbars: true,//滚动条渐隐
-            interactiveScrollbars: true,//滚动条可拖动
-            shrinkScrollbars: 'scale', // 当滚动边界之外的滚动条是由少量的收缩
-            useTransform: true,//CSS转化
-            useTransition: true,//CSS过渡
-            bounce: true//反弹
+            probeType: 2,//probeType：1对性能没有影响。在滚动事件被触发时，滚动轴是不是忙着做它的东西。probeType：2总执行滚动，除了势头，反弹过程中的事件。这类似于原生的onscroll事件。probeType：3发出的滚动事件与到的像素精度。注意，滚动被迫requestAnimationFrame（即：useTransition：假）。
+            scrollbars: true,//有滚动条
+            mouseWheel: true,//允许滑轮滚动
+            fadeScrollbars: true,//滚动时显示滚动条，默认影藏，并且是淡出淡入效果
+            bounce:true,//边界反弹
+            interactiveScrollbars:true,//滚动条可以拖动
+            shrinkScrollbars:'scale',// 当滚动边界之外的滚动条是由少量的收缩。'clip' or 'scale'.
+            click: true ,// 允许点击事件
+            keyBindings:true,//允许使用按键控制
+            momentum:true// 允许有惯性滑动
         });
 
         indexViewController.contentScroller.on("scrollEnd",onScrollEnd);
@@ -210,17 +215,33 @@
                 PageRowController('bottom');
                 $(conn.ContentView).prepend(list);
             }
+
             if(indexViewController.contentScroller == null){
                 initListScroller();
             }else{
+                if (conn.ActionType == 0){
+                    //下一页
+                    pullDownEl.removeClass('loading');
+                    pullDownL.html('下拉显示更多...');
+                    pullDownEl['class'] = pullDownEl.attr('class');
+                    pullDownEl.attr('class','').hide();
+
+                }else{
+                    //上一页
+                    pullUpEl.removeClass('loading');
+                    pullUpL.html('上拉显示更多...');
+                    pullUpEl['class'] = pullUpEl.attr('class');
+                    pullUpEl.attr('class','').hide();
+                }
+                loadingStep = 0;
                 indexViewController.contentScroller.refresh();
             }
         }
     }
 
     TurnPageRequest.didFailed = function (conn, err) {
-		console.log("===加载失败===");	
-		console.info(conn);
+        console.log("===加载失败===");
+        console.info(conn);
 
         if (conn.InterFace == "Discover/GetDiscoverKind") {
             ////9宫格子
@@ -517,54 +538,54 @@
 
 
     window["indexViewController"] = window["indexViewController"] || {
-        pageSize:100,
-        currentUserId:null,
-        turnPageTimer:null,
-        masterScroller:null,
-        contentScroller:null,
-        user:new C_lib.user(),
-        init:function(){
-            //1:检查用户登录状况
+            pageSize:100,
+            currentUserId:null,
+            turnPageTimer:null,
+            masterScroller:null,
+            contentScroller:null,
+            user:new C_lib.user(),
+            init:function(){
+                //1:检查用户登录状况
 
-            if (this.user.check()){
-                UpdateTurnPageRequest(this.user);
-            }else{
-                //加载游客课件列表
-                TurnPageRequest.ExtendParam = null;
-                TurnPageRequest.PageIndex = 0;
-                TurnPageRequest.get();
+                if (this.user.check()){
+                    UpdateTurnPageRequest(this.user);
+                }else{
+                    //加载游客课件列表
+                    TurnPageRequest.ExtendParam = null;
+                    TurnPageRequest.PageIndex = 0;
+                    TurnPageRequest.get();
 
-                //尚未登录//配置登录按钮事件
-                LoginPanelConfig(UpdateTurnPageRequest);
-            }
-            //2:加载 游客或当前用户课件
-            $("#MainRect").on("click",'li', function (e) {
-                var act = $(e.target).attr("data-action");
-                var id = $(e.target).attr("data-id");
-                switch (act) {
-                    case "edit": {
-                        var model = parseInt($(e.target).attr("data-type"));
-                        model = model == 2 ? 1 : 0;
-                        self.location = ' /PPTEditor.html?model=' + model + '&id=' + id;
-                    } break;
-                    case "remove": {
-                        layer.confirm('确认删除吗？', {
-                            btn: ['确定', '取消'] //按钮
-                        }, function () {
-                            RemoveCoursewareWithId(id)
-                        }, function () {
-                            layer.closeAll();
-                        });
-                    } break;
+                    //尚未登录//配置登录按钮事件
+                    LoginPanelConfig(UpdateTurnPageRequest);
                 }
-            });
+                //2:加载 游客或当前用户课件
+                $("#MainRect").on("click",'li', function (e) {
+                    var act = $(e.target).attr("data-action");
+                    var id = $(e.target).attr("data-id");
+                    switch (act) {
+                        case "edit": {
+                            var model = parseInt($(e.target).attr("data-type"));
+                            model = model == 2 ? 1 : 0;
+                            self.location = ' /PPTEditor.html?model=' + model + '&id=' + id;
+                        } break;
+                        case "remove": {
+                            layer.confirm('确认删除吗？', {
+                                btn: ['确定', '取消'] //按钮
+                            }, function () {
+                                RemoveCoursewareWithId(id)
+                            }, function () {
+                                layer.closeAll();
+                            });
+                        } break;
+                    }
+                });
 
 
 
-            //4.不监听 touchmove 事件
-            document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+                //4.不监听 touchmove 事件
+                document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+            }
         }
-    }
 
 })();
 

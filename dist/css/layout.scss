@@ -84,11 +84,11 @@
   }
 
 
-  /*
-      X 轴对齐:
-      @pack:   start      | end      | center | justify;
-      @content:flex-start | flex-end | center | space-between |
-  */
+    /*
+        X 轴对齐:
+        @pack:   start      | end      | center | justify;
+        @content:flex-start | flex-end | center | space-between |
+    */
   @else if($direction == "h"){
     -webkit-box-pack: $align;
     -moz-box-pack: $align;
@@ -146,20 +146,20 @@ input{
 
 .imageOptionsItem,
 .soundOptionsItem{
-    width:6.75rem; height: 6.75rem;display: block;
-    border: solid 1px #d0d0d0; margin: 0 2rem 2rem 0;
-    position: relative; overflow: hidden;
-    background-repeat: no-repeat;
-    background-image: url(../Images/ui-icon-sound.png);
-    background-position: center 20%;
-    background-size: auto 50%;
-    background-color: #fff;
-    @include radius(16%);
-   span{
-     display: block; position: absolute;
-     z-index: 10; left: 5%; right: 5%; bottom: 15%; text-align: center;
-     color:#666
-   }
+  width:6.75rem; height: 6.75rem;display: block;
+  border: solid 1px #d0d0d0; margin: 0 2rem 2rem 0;
+  position: relative; overflow: hidden;
+  background-repeat: no-repeat;
+  background-image: url(../Images/ui-icon-sound.png);
+  background-position: center 20%;
+  background-size: auto 50%;
+  background-color: #fff;
+  @include radius(16%);
+  span{
+    display: block; position: absolute;
+    z-index: 10; left: 5%; right: 5%; bottom: 15%; text-align: center;
+    color:#666
+  }
 
 }
 .imageOptionsItem{
@@ -226,7 +226,7 @@ input{
 
 
 audio, #PageUploadForm{
-  display: none; 
+  display: none;
 }
 
 
@@ -289,7 +289,7 @@ header{
       text-align: center;
       line-height: 2.375rem;
     }
-    }
+  }
 
 }
 .headerInnerToolbar > li{
@@ -316,12 +316,12 @@ header{
 
 #pageController{
   background-color: #fff; border: solid 1px #d0d0d0; overflow: hidden; padding: 1rem; position: fixed;  bottom: 1rem; top: 6.625rem; width:22.125rem; z-index: 9999;
- .pageControllerHeader{
-   height: 2rem; line-height: 2rem; padding-bottom: 0.75rem; border-bottom: solid 1px #d0d0d0; color: #ef495f;
-   span{display: inline-block; float: left; }
-   span:first-child{ display:inline-block; border-right: solid 1px #d0d0d0; width: 3.125rem; }
-   span:last-child{ width: 18.75rem; text-align: center;}
- }
+  .pageControllerHeader{
+    height: 2rem; line-height: 2rem; padding-bottom: 0.75rem; border-bottom: solid 1px #d0d0d0; color: #ef495f;
+    span{display: inline-block; float: left; }
+    span:first-child{ display:inline-block; border-right: solid 1px #d0d0d0; width: 3.125rem; }
+    span:last-child{ width: 18.75rem; text-align: center;}
+  }
   .pageControllerInner{
     clear: both; position: absolute; bottom: 1rem; top: 4rem;
     ol{
@@ -392,7 +392,7 @@ header{
 
   }
   .tab_bar_subItem{
-     background-color: white; display: none;
+    background-color: white; display: none;
     li{display: inline-block; padding: 0 .5rem; margin:.5rem; min-width: 3.125rem}
   }
 }
@@ -409,11 +409,12 @@ header{
     width: 600%; padding:0; margin: 0;
     transition: all 0.4s ease-in;
     li{
-      display:inline-block;
+      display:block;
       vertical-align: top;
       width: 45rem;
       overflow: hidden;
-      margin-right: -4px;
+      float: left;
+
       .tab_content_inner{
         padding: .5rem 1rem;
         overflow: hidden;
@@ -443,7 +444,7 @@ header{
           display: block;
         }
         .editorBoxToolbar a{
-           margin: .5rem; padding: .5rem; border-bottom: solid 3px transparent;
+          margin: .5rem; padding: .5rem; border-bottom: solid 3px transparent;
         }
         .editorBoxToolbar a[data-state="selected"],
         .editorBoxToolbar a:hover{
@@ -606,7 +607,7 @@ header{
   margin: 0 0.5rem;
 }
 .ui-layout-topBottom:before{
-content: ''; display: block; top: 1px; left: 1px; right: 1px; height: 5px ;position: absolute; background-color: #ef495f;
+  content: ''; display: block; top: 1px; left: 1px; right: 1px; height: 5px ;position: absolute; background-color: #ef495f;
 }
 .ui-layout-topBottom:after{
   content: ''; display: block; top:7px ; left: 1px; right: 1px;bottom: 1px;position: absolute; background-color: #ef495f;
@@ -731,7 +732,7 @@ content: ''; display: block; top: 1px; left: 1px; right: 1px; height: 5px ;posit
     text-size-adjust: none;
   }
   .scroller{
-     width: 100%;
+    width: 100%;
   }
   .ItemRow{ margin-bottom: 1rem; }
   .ItemRow:last-child{margin-bottom: 0;}
@@ -794,7 +795,7 @@ content: ''; display: block; top: 1px; left: 1px; right: 1px; height: 5px ;posit
 
 /*创建PPT 菜单面板*/
 #MakeRect{
-   position: fixed;
+  position: fixed;
   overflow: hidden;
   width:11.56rem;
   top:0.75rem;

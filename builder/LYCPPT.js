@@ -55,7 +55,6 @@ Array.prototype.insert = function (index, item) {
                  "builder/JCorp/jquery.Jcrop.js",//图片裁剪
                  "builder/JCorp/jquery.color.js",
                  "builder/Upload/jquery.form.js",//文件上传
-                 "builder/Upload/jquery.form.upload.js",
                  "builder/jquery.ui.js",//拖拽元素排序
                  "builder/jQuery.Hz2Py-min.js",//汉字拼音
                  "builder/iscroll.js",//模拟滚动条

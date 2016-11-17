@@ -380,11 +380,11 @@ header {
     margin: 0;
     transition: all 0.4s ease-in; }
     .tab_content ul li {
-      display: inline-block;
+      display: block;
       vertical-align: top;
       width: 45rem;
       overflow: hidden;
-      margin-right: -4px; }
+      float: left; }
       .tab_content ul li .tab_content_inner {
         padding: .5rem 1rem;
         overflow: hidden;

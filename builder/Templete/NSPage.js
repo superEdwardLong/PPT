@@ -30,12 +30,11 @@ var SoundItemDataStructrue = {
 
 //图片选项数据结构
 var ImageItemDataStructrue = {
-    imageId:0,
+    imageId:0,                //在提交后，用来判断是 新增还是修改
     imagePath:null,
     imageSort:0,
     imageDetail:null,
     imageBackgroundSound:null
-
 }
 
 //文字选项数据结构
@@ -56,6 +55,22 @@ var scrollDirectionEnum = {
     horizontally:0,
     vertically:1
 }
+
+
+var UploadMediaTypeEnum = {
+       backgroundImage:0,
+       optionImage:1,
+       iconImage:2,
+       elementImage:3,
+
+       backgroundSound:20,
+       optionSound:21,
+       answerSound:22,
+       elementSound:23,
+
+       video:30
+}
+
 
 var NSObject = function(){};
 NSObject.prototype = {
@@ -117,9 +132,15 @@ var NSPPTPage = function(){
     this.subjectTitle = null;//题目主题
     this.answer = null; //答案
     this.answerSound = null;//答案配音
-    this.imageUpload = ImageUpload;
-    this.soundUpload = SoundUpload;
-    this.videoUpload = VideoUpload;
+    this.imageUpload = function(form,callback){
+
+    };
+    this.soundUpload = function(form,callback){
+
+    };
+    this.videoUpload = function(form,callback){
+
+    };
     this.fontOptions = [
         {fontName:'超大字号',fontSize:60},
         {fontName:'大字号',fontSize:48},
@@ -298,7 +319,6 @@ var NSPPTPage = function(){
             _updateSliderColor(_colors);
         });
     };
-
     this.colors  = [
         {r:255,g:255,b:255,alpha:1},
         {r:255,g:204,b:0,alpha:1},
@@ -539,8 +559,6 @@ var SlidePage = function(){
         });
 
         $(".tab_bar_main li:first").trigger('click');
-
-
     };
     _SlidePage.thumbnail.draw = function(pageData,canvasId){
 
