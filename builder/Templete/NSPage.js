@@ -62,85 +62,34 @@ var UploadMediaTypeEnum = {
        optionImage:1,
        iconImage:2,
        elementImage:3,
+       videoCaptureImage:4,
+
 
        backgroundSound:20,
        optionSound:21,
        answerSound:22,
-       elementSound:23,
+       nilBackgroundSound:23,
 
        video:30
 }
 
-
-var NSObject = function(){};
-NSObject.prototype = {
-    id : null,
-    backgroundSound : null,//背景音乐
-    index:0,
-    show : function(){
-        //页面基础布局架构
-    },
-    setValue : function(value){
-        //填充播放页面数据
-    },
-    setEditValue:function(value){
-        //填充编辑页面数据
-    },
-    setEditEvent:function(){
-
-    },
-
-    getValue : function(){
-        //提取页面数据
-    },
-
-    editor : function(superView){
-        //编辑器
-    },
-
-    didShowEnding : function(superClass){
-        //展示结束
-        if(superClass && superClass.hasOwnProperty("next")){
-            superClass.next();
-        }
-    },
-    save : function(){
-        //保存数据到 indexedDB
-
-    },
-    add:function(){
-
-    },
-    remove:function(){
-
-    },
-    copy:function(){
-
-    },
-    adapter:function(dataSource){
-    },
-    reverseAdapter:function(){
-    }
-};
+//图片裁剪对象
+var jcrop_api = null;
+var scale = 16/9;
+var selectedClipImage = "";
 
 
 ///// 课件页面
 var NSPPTPage = function(){
+    this.id = null;
+    this.backgroundSound = null;//背景音乐
+    this.index =0;
     this.name = null;
     this.dataSource = null; //数据源
     this.backgroundColor = null; //背景颜色
     this.subjectTitle = null;//题目主题
     this.answer = null; //答案
     this.answerSound = null;//答案配音
-    this.imageUpload = function(form,callback){
-
-    };
-    this.soundUpload = function(form,callback){
-
-    };
-    this.videoUpload = function(form,callback){
-
-    };
     this.fontOptions = [
         {fontName:'超大字号',fontSize:60},
         {fontName:'大字号',fontSize:48},
@@ -399,12 +348,12 @@ var NSPPTPage = function(){
         STR_HTML += '<tr>';
         STR_HTML += '<td>&nbsp;</td>';
         STR_HTML += '<td>';
-        STR_HTML += '<a href="javascript:void(0)" data-type="button"  data-theme="green">上传声音</a><span>添加<select>';
-        STR_HTML += '<option value="3">3秒</option>';
+        STR_HTML += '<a href="javascript:UploadFile('+UploadMediaTypeEnum.backgroundSound+')" data-type="button"  data-theme="green" >上传声音</a>';
+        STR_HTML += '<span>添加<select><option value="3">3秒</option>';
         STR_HTML += '<option value="5">5秒</option>';
         STR_HTML += '<option value="7">7秒</option>';
         STR_HTML += '<option value="9">9秒</option>';
-        STR_HTML += '</select>空声音</span><a href="javascript:void(0)" data-type="button"  data-theme="gray">确认添加</a>';
+        STR_HTML += '</select>空声音</span><a href="javascript:UploadFile('+UploadMediaTypeEnum.nilBackgroundSound+')" data-type="button" >确认添加</a>';
         STR_HTML += '</td> </tr> </table>';
         STR_HTML += '</div>';
         STR_HTML += '</div>';
@@ -419,7 +368,8 @@ var NSPPTPage = function(){
         return STR_HTML;
     };
     this.editor = function(superView){
-        var STR_HTML = "<audio id='editor_audio' class='editor_audio'> </audio><form name='PageUploadForm' id='PageUploadForm' method='post' enctype='multipart/form-data'> <input type='file' value=''  /> </form>";
+        var STR_HTML = "<audio id='editor_audio' class='editor_audio'> </audio>";
+        STR_HTML += "<form name='PageUploadForm' id='PageUploadForm' method='post' enctype='multipart/form-data'> <input id='fileTextField' type='file' value='' onchange='UploadFileToService(this)'/> </form>";
         if(this.editorTopItem && typeof (this.editorTopItem) == "function"){
             STR_HTML += this.editorTopItem();
         }
@@ -434,9 +384,26 @@ var NSPPTPage = function(){
             this.setEditEvent();
         }
 
+    };
+
+    //展示方法
+    this.show = function(){
+
+    };
+    //展示事件
+    this.setShowEvent = function(){
+
+    };
+
+    //数据适配
+    this.adapter = function(dataSource){
+    };
+
+    //数据逆向适配
+    this.reverseAdapter = function(){
     }
 }
-NSPPTPage.prototype = new NSObject();
+
 
 
 
@@ -564,4 +531,230 @@ var SlidePage = function(){
 
     };
     return _SlidePage;
+}
+
+
+
+/*==================================
+ * 媒体文件上传
+ *
+ *
+ *
+ *================================== */
+//调用文件选择
+function UploadFile(mediaType){
+    var _form = $("#PageUploadForm");
+    var _fileInput = _form.find("input[type=file]");
+    if(mediaType < UploadMediaTypeEnum.videoCaptureImage){
+        //图片文件
+        var str = '';
+        str += '<input type="hidden"  name="img_x" value="0"/>';
+        str += '<input type="hidden"  name="img_y" value="0"/>';
+        str += '<input type="hidden"  name="img_x2" value="0"/>';
+        str += '<input type="hidden"  name="img_y2" value="0"/>';
+        str += '<input type="hidden"  name="img_w" value="0"/>';
+        str += '<input type="hidden"  name="img_h" value="0"/>';
+        str += '<input type="hidden"  name="CutType" value="1"/>';
+        str += '<input type="hidden" name="imageKind" value="1" />';
+        _form.append(str);
+        _fileInput.attr({"accept":"image/*","ready":0});
+
+    }else if(UploadMediaTypeEnum.videoCaptureImage < mediaType && mediaType < UploadMediaTypeEnum.video){
+        _form.children("input[type=hidden]").remove();
+        _fileInput.attr({"accept":"audio/*","ready":1});
+        //音频文件
+
+    }else if(mediaType == UploadMediaTypeEnum.video){
+        //视频文件
+        _form.children("input[type=hidden]").remove();
+        _fileInput.attr({"accept":"video/*","ready":1});
+    }else if(mediaType == UploadMediaTypeEnum.videoCaptureImage){
+        //视频截图
+        return;
+    }
+    if(arguments.length > 1){
+        _fileInput.attr("data-Index",arguments[1]);
+    }
+    _fileInput.attr("mediaType",mediaType);
+    _fileInput.trigger('click');
+}
+
+//图片编辑完成，确认上传
+function ConfirmUploadImage(isClip){
+    if(isClip == 0){
+        //源图上传，不裁剪
+        $("#PageUploadForm input[type=hidden][name ^= img_]").val(0);
+    }
+    var _imgField = document.getElementById("fileTextField");
+    _imgField.setAttribute("ready","1");
+    UploadFileToService(_imgField);
+}
+
+//上传文件到服务器
+function UploadFileToService(element){
+    var _mediaType = parseInt($(element).attr('mediaType'));
+    var _ready = parseInt($(element).attr('ready'));
+    var _index = $(element).attr('data-Index');
+
+    if(_ready == 0 && _mediaType <= UploadMediaTypeEnum.elementImage){
+        //图片文件裁剪
+        if (navigator.userAgent.indexOf("MSIE") >= 1) { // IE
+            selectedClipImage = element.value;
+        } else if (navigator.userAgent.indexOf("Firefox") > 0) { // Firefox
+            selectedClipImage = window.URL.createObjectURL(element.files.item(0));
+        } else if (navigator.userAgent.indexOf("Chrome") > 0) { // Chrome
+            selectedClipImage = window.URL.createObjectURL(element.files.item(0));
+        }
+        var _ClipHTML = '<div class="clipRect"><img src="" id="JcropImages"/></div>' +
+            '<div> ' +
+            '<a href="javascript:ConfirmUploadImage(0);" data-type="button" data-theme="green">上传源图</a> ' +
+            '<a href="javascript:ConfirmUploadImage(1);" data-type="button" data-theme="green" >确认上传</a>' +
+            '</div>';
+        if(_mediaType == UploadMediaTypeEnum.iconImage){
+            scale = 1;
+        };
+
+        layer.open({
+            title:"图片裁剪",
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['1170', '765px'], //宽高
+            content: _ClipHTML
+        });
+
+        //初始化裁剪工具
+        setTimeout("Jcrop_Init()",200);
+        return;
+    }
+
+    var interFace;
+    if(mediaType < UploadMediaTypeEnum.videoCaptureImage){
+        interFace = "UploadSubjectImage/AddImage";
+    }else if(UploadMediaTypeEnum.videoCaptureImage < mediaType && mediaType < UploadMediaTypeEnum.video){
+        interFace = "UploadSubjectSound/AddSound";
+    }else if(mediaType == UploadMediaTypeEnum.video){
+        interFace = "UploadSubjectVideo/AddSound";
+    }
+
+    $("#PageUploadForm").ajaxSubmit({
+        type: "post",
+        url: "/PPTWebApi/Api/" + interFace,
+        headers: { "Token": mySelf.token},
+        success: function (result) {
+            if (result.Status == 1) {
+                DidUploadCallback(result,_mediaType,_index);
+            } else {
+                alert(result.Msg);
+            }
+        },
+        error: function (XmlHttpRequest, textStatus, errorThrown) {
+            alert("文件上传失败");
+        }
+    });
+}
+
+function DidUploadCallback(sender,mediaType,optionIndex){
+    //统一适配对象
+    var media = {
+        UniqueID:0,Path:null
+    };
+    if(mediaType <= UploadMediaTypeEnum.videoCaptureImage){
+        media.UniqueID = sender.ImagePath.UniqueID;
+        media.Path = sender.ImagePath.ImagePath;
+    }else if(mediaType <= UploadMediaTypeEnum.nilBackgroundSound){
+        media.UniqueID = sender.BASound.UniqueID;
+        media.Path = sender.BASound.SoundPath;
+    }else{
+        media.UniqueID = sender.VedioPath.UniqueID;
+        media.Path = sender.VedioPath.VedioPath;
+    }
+    //根据类型 作相应的互动
+    switch (mediaType){
+        //图片
+        case UploadMediaTypeEnum.backgroundImage:{
+
+        }break;
+        case UploadMediaTypeEnum.optionImage:{
+
+        }break;
+        case UploadMediaTypeEnum.iconImage:{
+
+        }break;
+        case UploadMediaTypeEnum.elementImage:{
+
+        }break;
+        case UploadMediaTypeEnum.videoCaptureImage:{
+
+        }break;
+        //音频
+        case UploadMediaTypeEnum.backgroundSound:
+        case UploadMediaTypeEnum.nilBackgroundSound:{
+
+        }break;
+        case UploadMediaTypeEnum.optionSound:{
+
+        }break;
+        case UploadMediaTypeEnum.answerSound:{
+
+        }break;
+
+        //视频
+        case UploadMediaTypeEnum.video:{
+
+        }break;
+    }
+};
+
+/*==============================
+* 图片裁剪
+*
+*
+*
+*=============================*/
+//初始化裁剪插件
+function Jcrop_Init(){
+    if(jcrop_api){
+        jcrop_api.destroy();
+        jcrop_api = null;
+    };
+    $("#JcropImages").Jcrop({
+        cornerHandles:true,	//允许边角缩放
+        sideHandles:true,	//允许四边缩放
+        drawBorders:true,	//绘制边框
+        dragEdges:true,	//允许拖动边框
+        allowMove:true,
+        boxWidth: 1170,
+        trackDocument: true,
+        aspectRatio: scale,
+        minSize: [80, 45],
+        bgOpacity: .2,
+        bgFade: true,
+        onChange: showCoords,
+        onSelect: showCoords
+    }, function () {
+        jcrop_api = this;
+        var image = new Image();
+        image.src = selectedClipImage;
+        image.onload = function () {
+            var x = image.width * 0.25;
+            var x2 = image.width - x;
+
+            var y = image.height * 0.25;
+            var y2 = image.height - y;
+
+            jcrop_api.setImage(image.src);
+            setTimeout(function(){
+                jcrop_api.animateTo([x, y, x2, y2]);
+            },200);
+        }
+    });
+}
+var showCoords = function (c) {
+    var form = $("#PageUploadForm");
+    form.find("input[name = img_x]").val(parseInt(c.x));
+    form.find("input[name = img_y]").val(parseInt(c.y));
+    form.find("input[name = img_x2]").val(parseInt(c.x2));
+    form.find("input[name = img_y2]").val(parseInt(c.y2));
+    form.find("input[name = img_w]").val(parseInt(c.w));
+    form.find("input[name = img_h]").val(parseInt(c.h));
 }

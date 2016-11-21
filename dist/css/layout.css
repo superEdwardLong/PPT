@@ -1478,4 +1478,27 @@ header {
   transform: rotate(-30deg);
   z-index: 2; }
 
+.clipRect {
+  width: 1170px;
+  padding: 5px;
+  height: 650px;
+  overflow: auto;
+  text-align: center;
+  background-color: black; }
+
+.clipRect + div:before {
+  content: '';
+  width: 100%;
+  height: 1px;
+  background-color: #E2E2E2; }
+
+.clipRect + div {
+  width: 100%;
+  overflow: hidden;
+  text-align: center; }
+  .clipRect + div a {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 10px 5px; }
+
 /*# sourceMappingURL=layout.css.map */

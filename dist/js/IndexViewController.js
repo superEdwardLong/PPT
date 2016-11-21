@@ -546,7 +546,6 @@
             user:new C_lib.user(),
             init:function(){
                 //1:检查用户登录状况
-
                 if (this.user.check()){
                     UpdateTurnPageRequest(this.user);
                 }else{

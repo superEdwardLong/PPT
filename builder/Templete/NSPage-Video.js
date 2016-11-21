@@ -20,7 +20,7 @@ var PageVideo = function(){
         STR_HTML += '</div>';
         STR_HTML += '</td>';
         STR_HTML += '<td width="15">';
-        STR_HTML += '<a href="javascript:void(0)" data-type="button"  data-theme="gray">上传视频</a>';
+        STR_HTML += '<a href="javascript:UploadFile('+UploadMediaTypeEnum.video+')" data-type="button"  data-theme="gray" >上传视频</a>';
 
         STR_HTML += '</td>';
         STR_HTML += '</tr>';

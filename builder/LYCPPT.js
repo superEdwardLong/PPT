@@ -7,7 +7,6 @@ var PPTTypeEnum = {
     phantom:1
 }
 
-
 var PPTDataStructure = {
     pptid:0,
     type:null,           //类型@:幻灯片 ,@:幻影片
@@ -286,6 +285,7 @@ function SubmitPPT(){
 /*=====================
  * 文档初始化准备
  * ====================*/
+var mySelf = new C_lib.user();
 $(function(){
     //初始化
     function init_block(isEdit){
@@ -302,7 +302,7 @@ $(function(){
             {tableName:"t_PPT",orderBy:"CreateTime"},
             {tableName:"t_Page",orderBy:"PageIndex"}
         ],function(){
-
+            /*获取参数*/
             var _PPTType = C_lib.getUrlParam("Model") || PPTTypeEnum.phantom;
             var _PPTId = C_lib.getUrlParam("PPTId") || 0;
             var _PPTAction = C_lib.getUrlParam("Action") || "edit";
@@ -353,6 +353,7 @@ $(function(){
                         layer.confirm("草稿中有尚未完成的屁屁体,要继续吗?",{
                             btn:['继续','全新']
                         },function(){
+                            //提取缓存中的PPT
                             var _PPTCache = arr[0];
                             PPTDatabase.getAllItem('t_Page',{ParentId:_PPTCache.uid},'PageIndex',function(pageDbArr){
                                 var _PageArr = [];

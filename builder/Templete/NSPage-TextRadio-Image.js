@@ -18,7 +18,7 @@ var PageTextRadioImage = function(){
         STR_HTML += '<td width="15%" align="center">图片</td>';
         STR_HTML += '<td><div class = "dashedRect"></div></td>';
         STR_HTML += '<td width="15">';
-        STR_HTML += '<a href="javascript:void(0)" data-type="button"  data-theme="gray">上传图片</a>';
+        STR_HTML += '<a href="javascript:UploadFile('+UploadMediaTypeEnum.backgroundImage+')" data-type="button"  data-theme="gray" >上传图片</a>';
         STR_HTML += '</td>';
         STR_HTML += '</tr>';
         STR_HTML += '</table>';

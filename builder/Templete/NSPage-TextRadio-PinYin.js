@@ -12,10 +12,10 @@ var PagePinYin = function(){
         STR_HTML += '<div class="editorBoxInner">';
         STR_HTML += '<div class="editorBoxToolbar">';
         for(var i=0; i< this.fontOptions.length; i++){
-            STR_HTML += '<a href="javascript:void(0)" data-size="'+this.fontOptions[i].fontSize+'"> '+this.fontOptions[i].fontName+' </a>';
+            STR_HTML += '<a href="javascript:void(0)" data-type="optionButton" data-size="'+this.fontOptions[i].fontSize+'"> '+this.fontOptions[i].fontName+' </a>';
         }
         STR_HTML += '</div>';
-        STR_HTML += '<textarea placeholder="请输入题目文字"></textarea>';
+        STR_HTML += '<textarea placeholder="请输入题目文字" name="subjectText"></textarea>';
         STR_HTML += '</div>';
         STR_HTML += '</div>';
         return STR_HTML;
@@ -26,7 +26,7 @@ var PagePinYin = function(){
             $("textarea").val(pageData.pageText.textContent).css("font-size",pageData.pageText.textFontSize);
             $(".editorBoxToolbar a").each(function(index,element){
                if( parseInt(element.attr("data-size")) == pageData.pageText.textFontSize){
-                   element.attr("data-size","selected").siblings('a').removeAttr('data-size');
+                   element.attr("data-state","selected").siblings('a').removeAttr('data-state');
                    return false;
                }
             });

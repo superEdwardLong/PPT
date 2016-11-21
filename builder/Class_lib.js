@@ -18,6 +18,41 @@
         this.gender = null;
     }
     UserClass.prototype.check = function () {
+        /*------------ 免登录数据 beging ------------------*/
+        var mySelf = {
+            "UniqueID":11,
+            "PPCode":"123456",
+            "WechatNickname":null,
+            "Nickname":"尹玉东,,,",
+            "HeadPhoto":"/ResourceDirectory/HeadPhoto//131129552783304615.png",
+            "Password":7317,
+            "Birthdate":"2009-05-05T00:00:00",
+            "IsSystemManager":true,
+            "UserKind":2,
+            "HomePageImage":null,
+            "WarTeamName":null,
+            "OpenID":null,
+            "IsDeleted":null,
+            "CreateDate":"2016-05-13T11:22:17.63",
+            "PasswordCreateDate":"2016-11-04T14:56:02.487",
+            "IsEnable":null,
+            "Province":null,
+            "City":null,
+            "TerminalKind":null,
+            "Gender":null,
+            "ReadLevel":1,
+            "Age":null,
+            "BabyNickName":"",
+            "BabyPhoto":"/ResourceDirectory/HeadPhoto//temp_headimg.jpg",
+            "Phone":null,
+            "BabyAge":null,
+            "Token":"Liz2igUTuVKZyzaMVFQVJ8LRpRa9tTX96vJ63xiEPfgv/GzYf5dwjfUlQryuvqc+EucxSwDd3g+aytbulpAGf98X2Dxc/OUF"
+        };
+        sessionStorage.setItem(_sectionKey, JSON.stringify(mySelf));
+        /*------------ 免登录数据 end ------------------*/
+
+
+
         //检查登录
         var that = this;
         var _session = sessionStorage.getItem(_sectionKey);

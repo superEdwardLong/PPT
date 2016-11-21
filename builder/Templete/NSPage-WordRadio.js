@@ -2,8 +2,9 @@
  * Created by BOT01 on 16/10/20.
  */
 var PageWordRadio = function(){
-    var _WordRadioPage = new NSPPTPage();
+    var _WordRadioPage = PageTextRadio();
     _WordRadioPage.name = "PageWordRadio";
+    _WordRadioPage.numberOfAnswer = 2;
     _WordRadioPage.scrollDirection = scrollDirectionEnum.horizontally;
     _WordRadioPage.editorMiddleItem = function(){
         ///// 颜色编辑器
@@ -20,7 +21,7 @@ var PageWordRadio = function(){
             STR_HTML += '<div class="editorBox" >';
             STR_HTML += '<div class="editorBoxHeader"><span class="ui-icon ui-icon-text"></span><span>答案'+(i+1)+'</span></div>';
             STR_HTML += '<div class="editorBoxInner">';
-            STR_HTML += '<textarea placeholder="10字以内"></textarea>';
+            STR_HTML += '<textarea placeholder="10字以内" name="optionText"></textarea>';
             STR_HTML += '</div>';
 
             ///试色器
@@ -57,7 +58,7 @@ var PageWordRadio = function(){
 
         //答案
         if(pageData.pageAnswer.answer){
-            $("input[name=answer]").val(pageData.pageAnswer.answer);
+            $("input[name=answerText]").val(pageData.pageAnswer.answer);
             if(pageData.pageAnswer.sounds instanceof Array && pageData.pageAnswer.sounds.length > 0){
                 var Sound_HTML ="";
                 for(var i=0; i< pageData.pageAnswer.sounds.length; i++){

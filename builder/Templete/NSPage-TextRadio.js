@@ -18,15 +18,15 @@ var PageTextRadio = function(){
         STR_HTML += '<ol class="editorTextQuestionList" >';
         //答案选项
         for(var i=0; i< this.numberOfAnswer;i++){
-            STR_HTML += '<li> <input type="text" value="" class="ui-textfield" placeholder="请输入答案"/> ' +
-                '<a href="javascript:void(0)" data-type="button" data-theme="green">配音 </a> ' +
+            STR_HTML += '<li data-id="0"> <input type="text" value="" class="ui-textfield" placeholder="请输入答案" name="optionText"/> ' +
+                '<a href="javascript:UploadFile('+UploadMediaTypeEnum.optionSound+','+i+')" data-type="button" data-theme="green" >配音 </a> ' +
                 '</li>';
         };
         STR_HTML += '</ol>';
         STR_HTML += '</div>';
         STR_HTML += '<div class="editorBoxFooter">';
-        STR_HTML += '<label>√ 正确答案 <input type="text" value="" class="ui-textfield" placeholder="答案" name="anwser"/></label>';
-        STR_HTML += '<a href="javascript:void(0)" data-type="button" data-theme="green">配音 </a>';
+        STR_HTML += '<label>√ 正确答案 <input type="text" value="" class="ui-textfield" placeholder="答案" name="anwserText"/></label>';
+        STR_HTML += '<a href="javascript:UploadFile('+UploadMediaTypeEnum.answerSound+')" data-type="button" data-theme="green" >配音 </a>';
         //STR_HTML += '<a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="green"><span class="ui-icon ui-icon-soundWave "></span>58s</a>';
         STR_HTML += '</div>';
         STR_HTML += '</div>';
@@ -37,8 +37,8 @@ var PageTextRadio = function(){
         var STR_HTML = '';
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
         STR_HTML += '<div class="editorBoxHeader"><span class="ui-icon ui-icon-text"></span><span>题目文字</span></div>';
-        STR_HTML += '<div class="editorBoxInner">';
-        STR_HTML += '<textarea placeholder="10字以内"></textarea>';
+        STR_HTML += '<div class="editorBoxInner" data-id="0">';
+        STR_HTML += '<textarea placeholder="10字以内" name="subjectText"></textarea>';
         STR_HTML += '</div>';
         STR_HTML += '</div>';
         return STR_HTML;
@@ -73,7 +73,7 @@ var PageTextRadio = function(){
                 var editItem;
                 for(var i=0; i< pageData.pageOptions.texts.length; i++){
                     editItem = $(".editorTextQuestionList li").eq(pageData.pageOptions.texts[i].textSort);
-                    editItem.find("input").val(pageData.pageOptions.texts[i].textContent);
+                    editItem.find("input[name=optionText]").val(pageData.pageOptions.texts[i].textContent);
                     if(pageData.pageOptions.texts[i].textBackgroundSound){
                         var Sound_HTML = _super.get_HTML_SoundItem(pageData.pageOptions.texts[i].textBackgroundSound);
                         editItem.find("a:last").after(Sound_HTML);
@@ -83,7 +83,7 @@ var PageTextRadio = function(){
 
             //答案
             if(pageData.pageAnswer.answer){
-                $("input[name=answer]").val(pageData.pageAnswer.answer);
+                $("input[name=answerText]").val(pageData.pageAnswer.answer);
                 if(pageData.pageAnswer.sounds instanceof Array && pageData.pageAnswer.sounds.length > 0){
                     var Sound_HTML ="";
                     for(var i=0; i< pageData.pageAnswer.sounds.length; i++){
@@ -94,6 +94,7 @@ var PageTextRadio = function(){
             }
 
         }
-    }
+    };
+
     return _TextRadioPage;
 }
