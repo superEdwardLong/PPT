@@ -29,7 +29,7 @@ var PageTextRadioImage = function(){
     };
     _TextRadioImagePage.setEditSubject = function(pageData){
         if(pageData.pageBackgroundImage){
-            $(".dashedRect").append("<div class='imgRect' style='background-image: url("+pageData.pageBackgroundImage+")'></div>");
+            $(".dashedRect").append("<div class='imgRect' style='background-image: url("+pageData.pageBackgroundImage.Path+")'></div>");
         }
     }
 

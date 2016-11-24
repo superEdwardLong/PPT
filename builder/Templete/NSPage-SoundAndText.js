@@ -41,16 +41,16 @@ var PageSoundAndText = function(){
     _SoundAndTextPage.setEditValue = function(pageData){
         var _super = this;
         if(pageData){
-            if(pageData.pageOptions.sounds instanceof Array && pageData.pageOptions.sounds.length > 0){
+            if(pageData.pageBackgroundSound instanceof Array && pageData.pageBackgroundSound.length > 0){
                 var STR_HTML = '';
-                for(var i=0; i< pageData.pageOptions.sounds.length; i++){
-                    STR_HTML += "<li>"+_super.get_HTML_SoundItem(pageData.pageOptions.sounds[i])+"</li>";
+                for(var i=0; i< pageData.pageBackgroundSound.length; i++){
+                    STR_HTML += "<li data-id='"+pageData.pageBackgroundSound[i].UniqueID+"'>"+_super.get_HTML_SoundItem(pageData.pageBackgroundSound[i].Path)+"</li>";
                 }
                 $(".editorSoundList").append(STR_HTML);
             }
             //页面图标
             if(pageData.pageIcon){
-                $(".dashedRect").append("<div class='imgRect' style='background-image: url("+pageData.pageIcon+")'></div>");
+                $(".dashedRect").append("<div class='imgRect' style='background-image: url("+pageData.pageIcon.Path+")'></div>");
             }
 
             //文字

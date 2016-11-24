@@ -15,7 +15,7 @@ var PPTDataStructure = {
     backgroundSound:null,//背景音乐
     detail : null,      //详情
     author : null,      //作者
-    dateTime : null,    //发布时间
+    createTime : null,    //发布时间
     collection : 0,     //收藏次数
     reads : 0,
     pages:[]
@@ -56,8 +56,8 @@ Array.prototype.insert = function (index, item) {
                  "builder/Upload/jquery.form.js",//文件上传
                  "builder/jquery.ui.js",//拖拽元素排序
                  "builder/jQuery.Hz2Py-min.js",//汉字拼音
-                 "builder/iscroll.js",//模拟滚动条
-                 "builder/Templete/NSPage.js"
+                 "builder/iscroll.js"//模拟滚动条
+
              ],
              templetes:[
                  {name:"语音+图片", path:"builder/Templete/NSPage-SoundAndImage.js",fn:"PageSoundAndImage"},
@@ -71,22 +71,16 @@ Array.prototype.insert = function (index, item) {
                  {name:"注音选择题",path:"builder/Templete/NSPage-TextRadio-PinYin.js",fn:"PagePinYin"},
                  {name:"文字选择题",path:"builder/Templete/NSPage-WordRadio.js",fn:"PageWordRadio"}
              ]
-         },uid:0,//编辑时的缓存ID
-         pptid:0,//课件ID
-         backgroundSound:null,//背景音乐
-         type:null,           //类型@:幻灯片 ,@:幻影片
-         title : null,       //主题
-         cover : null,       //封面
-         detail : null,      //详情
-         author : null,      //作者
-         dateTime : null,    //发布时间
-         collection : 0,     //收藏次数
-         reads : 0,          //阅读次数
+         },
+         uid:0,//编辑时的缓存ID
+         type:null,     //类型
+         dataSource:null, //数据源
          currtPage:null,   //当前页对象
          pages:[],         //页面集合
 
         /*使用模板创建页面*/
         addPageWith:function(TemplatePage,AtPageIndex){
+            TemplatePage.dataSource.pageFnName = TemplatePage.name;
             //添加模板页
             this.pages.insert(AtPageIndex,TemplatePage);
 
@@ -130,16 +124,7 @@ Array.prototype.insert = function (index, item) {
 
 
         },
-        thumbnailList:function(){
-            var _pageData;
-            var _superView = $(".pageControllerInner ol");
-            for(var i = 0; i<this.pages.length;i++){
-                _pageData = this.pages[i].dataSource;
-                this.pages[i].thumbnail.addAtPageIndex(i,_pageData,_superView);
-            }
-        },
-
-            /*编辑初始化*/
+        /*编辑初始化*/
         init:function(isEdit){
             /*
             初始化
@@ -149,19 +134,6 @@ Array.prototype.insert = function (index, item) {
 
             if(isEdit){
                 /*如果是编辑模式*/
-                if(this.pages.length > 0){
-                    /*页面数目大于 0  ==> 载入缩略图列表 */
-                    this.thumbnailList();
-                }else{
-                    var _NewPage;
-                    if(this.type == PPTTypeEnum.slide){
-                        _NewPage = SlidePage();
-                    }else if(this.type == PPTTypeEnum.phantom){
-                        _NewPage = eval(PPT.config.templetes[0].fn+"()");
-                    }
-                    PPT.addPageWith(_NewPage,0);
-                }
-
                 $(".pageControllerInner ol").on("click","li",function(e){
                     if($(this).attr("data-state") == undefined){
                         var _selectedIndex = $(this).index();
@@ -169,9 +141,55 @@ Array.prototype.insert = function (index, item) {
                     }
                 });
 
+                var _pages = this.dataSource.pages;
+                var _newPage = null;
+                var _pageItem;
+                for(var i=0; i< _pages.length; i++){
+                    _pageItem = JSON.parse(_pages[i]);
+                    //初始化内页对象
+                    _newPage = eval(_pageItem.pageFnName+"()");
+
+                    //初始化内页对象数据源
+                    _newPage.dataSource = _pageItem;
+
+                    //绘制缩略图
+                    _newPage.thumbnail.addAtPageIndex(i,_pages[i],$(".pageControllerInner ol"));
+
+                    //添加内页对象到PPT内页数组中
+                    this.pages.push(_newPage);
+                };
+
+                if(_pages.length > 0){
+                   this.turnToPage(0,true);
+                }else{
+                    //自动创建一个内页
+                    if(this.type == PPTTypeEnum.slide){
+                        _newPage = SlidePage();
+
+                    }else if(this.type == PPTTypeEnum.phantom){
+                        _newPage = eval(PPT.config.templetes[0].fn+"()");
+
+                    }
+                    PPT.addPageWith(_newPage,0);
+                }
             }else{
                 /*如果是播放模式*/
-                if(this.pages.length == 0){
+                var _pages = this.dataSource.pages;
+                var _newPage = null;
+                for(var i=0; i< _pages.length; i++){
+                    //初始化内页对象
+                    _newPage = eval(_pages[i].pageFnName+"()");
+
+                    //初始化内页对象数据源
+                    _newPage.dataSource = _pages[i];
+
+                    //添加内页对象到PPT内页数组中
+                    this.pages.push(_newPage);
+                };
+
+
+
+                if(_pages.length == 0){
                     /*页面数目等于 0*/
                     layer.confirm(
                         "您的屁屁体页面为空，要进入编辑模式吗？[确定]进入，[取消]关闭",
@@ -201,21 +219,31 @@ Array.prototype.insert = function (index, item) {
 
         },
         save:function(){
-            console.log("auto save ppt");
-        },
-            //适配为当前的数据结构
-        adapter:function(dataSource){
-            if(dataSource){
-
+            var that = this;
+            var _db = $.extend(true,{uid:that.uid},this.dataSource);
+            _db.pages = [];
+            for(var i=0; i< that.pages.length;i++){
+                _db.pages.push(JSON.stringify(that.pages[i].dataSource));
             }
-        },
-            //适配为数据库接收的数据结构
-        reverseAdapter:function(){
 
+            //备份数据到草稿数据库
+            console.info(_db);
+            PPTDatabase.updateItem('t_PPT',_db,function(){
+                console.log('============== 保存成功 ==================');
+            });
         }
-
      }
 })();
+
+
+//// 数据适配: 服务器数据适配为框架数据适配
+function Adapter(dataSource){
+    return dataSource;
+}
+//// 数据适配:框架数据适配为服务器数据
+function ReverseAdapter(dataSource){
+    return dataSource;
+}
 
 /*=====================
 * 添加一个页面
@@ -286,28 +314,31 @@ function SubmitPPT(){
  * 文档初始化准备
  * ====================*/
 var mySelf = new C_lib.user();
-$(function(){
-    //初始化
-    function init_block(isEdit){
-        PPT.init(isEdit);
-        if(isEdit){
-            /*每2分钟 自动保存一次;*/
-            var times = 1000 * 60 * 2;
-            setInterval(PPT.save,times);
-        }
+var _PPTType,_PPTId,_PPTAction,_isEdit;
+
+
+function init_block(isEdit){
+    PPT.init(isEdit);
+    if(isEdit){
+        /*每2分钟 自动保存一次;*/
+        var times = 1000 * 60 * 2;
+        setInterval("PPT.save()",times);
     }
+}
+$(function(){
+     _PPTType = C_lib.getUrlParam("Model") || PPTTypeEnum.phantom;
+     _PPTId = C_lib.getUrlParam("PPTId") || 0;
+     _PPTAction = C_lib.getUrlParam("Action") || "edit";
+     _isEdit = _PPTAction.toLocaleLowerCase() == "play" ? false : true;
+
+    //初始化
+    mySelf.check();
     
     PPTDatabase.init(
         [
-            {tableName:"t_PPT",orderBy:"CreateTime"},
-            {tableName:"t_Page",orderBy:"PageIndex"}
+            {tableName:"t_PPT",orderBy:"createTime"}
         ],function(){
             /*获取参数*/
-            var _PPTType = C_lib.getUrlParam("Model") || PPTTypeEnum.phantom;
-            var _PPTId = C_lib.getUrlParam("PPTId") || 0;
-            var _PPTAction = C_lib.getUrlParam("Action") || "edit";
-            var _isEdit = _PPTAction.toLocaleLowerCase() == "play" ? false : true;
-
             if(_PPTType) _PPTType = parseInt(_PPTType);
             if(_PPTId) _PPTId = parseInt(_PPTId);
 
@@ -315,8 +346,6 @@ $(function(){
             PPT.id = _PPTId;
 
             if(_PPTId > 0){
-                //清空缓存
-                PPTDatabase.clear(['t_PPT','t_Page']);
 
                 /*读取网络数据*/
                 var request = C_lib.request();
@@ -334,8 +363,9 @@ $(function(){
                      * 1:数据适配,并填充
                      * 2:初始化
                      * ===============*/
-                    PPT.adapter(result);
-                    init_block(_isEdit);
+
+                    CreatePPT(_isEdit,PPT.adapter(result));
+
                 };
                 request.didFailed = function(conn,errString){
                     layer.closeAll();
@@ -348,36 +378,47 @@ $(function(){
                  * 1:继续 ==> 调出本地数据;
                  * 2:全新 ==> 清理本地数据
                  * */
-                PPTDatabase.getAllItem('t_PPT',{PPTId:_PPTId},'CreateTime',function(arr){
+                PPTDatabase.getAllItem('t_PPT',{pptid:_PPTId},'createTime',function(arr){
                     if(arr.length > 0 && _isEdit){
-                        layer.confirm("草稿中有尚未完成的屁屁体,要继续吗?",{
-                            btn:['继续','全新']
-                        },function(){
-                            //提取缓存中的PPT
-                            var _PPTCache = arr[0];
-                            PPTDatabase.getAllItem('t_Page',{ParentId:_PPTCache.uid},'PageIndex',function(pageDbArr){
-                                var _PageArr = [];
-                                for(var i=0; i<pageDbArr.length; i++){
-                                   var _page =  eval(pageDbArr[i].name+"()");
-                                    _page.adapter(pageDbArr[i]);
-                                    _PageArr.push(_page);
-                                }
-                                console.log("=== 缓存创建 ===");
+                        layer.confirm(
+                            "草稿中有尚未完成的屁屁体,要继续吗?",
+                            {btn:['继续','全新']},
+                            function(){
+                                //提取缓存中的PPT
+                                var _PPTCache = arr[arr.length-1].value;
+                                PPT.uid = _PPTCache.uid;
+                                delete _PPTCache.uid;
+                                PPT.dataSource = _PPTCache;
                                 init_block(_isEdit);
-                            });
-
-                        },function(){
-                            //清空缓存
-                           PPTDatabase.clear(['t_PPT','t_Page']);
-                            console.log("=== 全新创建 ===");
-                            init_block(_isEdit);
-                        });
+                                layer.closeAll();
+                            },
+                            function(){
+                                PPTDatabase.clear(['t_PPT']);
+                                console.log("=== 全新创建 ===");
+                                CreatePPT(_isEdit);
+                                layer.closeAll();
+                            }
+                        );
                     }else{
                         console.log("=== 全新创建 ===");
-                        init_block(_isEdit);
+                        CreatePPT(_isEdit);
+
                     }
                 });
            }
         }
     );
 });
+
+function CreatePPT(isEdit,data){
+    if(data == null || data == undefined){
+        var timeStamp = (new Date()).getTime();
+        data = $.extend(true,PPTDataStructure,{createTime:timeStamp,author:mySelf.name,type:_PPTType});
+    }
+    PPT.dataSource = data;
+
+    PPTDatabase.addItem('t_PPT',data,function(itemId){
+        PPT.uid = itemId;
+        init_block(isEdit);
+    });
+}

@@ -15,18 +15,18 @@ var PageTextRadio = function(){
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
         STR_HTML += '<div class="editorBoxHeader"><span class="ui-icon ui-icon-text"></span><span>题目答案</span></div>';
         STR_HTML += '<div class="editorBoxInner">';
-        STR_HTML += '<ol class="editorTextQuestionList" >';
+        STR_HTML += '<ol class="editorTextQuestionList" name="group_opts">';
         //答案选项
         for(var i=0; i< this.numberOfAnswer;i++){
             STR_HTML += '<li data-id="0"> <input type="text" value="" class="ui-textfield" placeholder="请输入答案" name="optionText"/> ' +
                 '<a href="javascript:UploadFile('+UploadMediaTypeEnum.optionSound+','+i+')" data-type="button" data-theme="green" >配音 </a> ' +
-                '</li>';
+                '<span class="soundPlaceholder"></span></li>';
         };
         STR_HTML += '</ol>';
         STR_HTML += '</div>';
         STR_HTML += '<div class="editorBoxFooter">';
         STR_HTML += '<label>√ 正确答案 <input type="text" value="" class="ui-textfield" placeholder="答案" name="anwserText"/></label>';
-        STR_HTML += '<a href="javascript:UploadFile('+UploadMediaTypeEnum.answerSound+')" data-type="button" data-theme="green" >配音 </a>';
+        STR_HTML += '<a href="javascript:UploadFile('+UploadMediaTypeEnum.answerSound+')" data-type="button" data-theme="green" >配音 </a><span class="soundPlaceholder"></span>';
         //STR_HTML += '<a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="green"><span class="ui-icon ui-icon-soundWave "></span>58s</a>';
         STR_HTML += '</div>';
         STR_HTML += '</div>';
@@ -59,10 +59,10 @@ var PageTextRadio = function(){
             }
 
             //配音
-            if(pageData.pageOptions.sounds instanceof Array && pageData.pageOptions.sounds.length > 0){
+            if(pageData.pageBackgroundSound instanceof Array && pageData.pageBackgroundSound.length > 0){
                 var STR_HTML = '';
-                for(var i=0; i< pageData.pageOptions.sounds.length; i++){
-                    STR_HTML += "<li>"+_super.get_HTML_SoundItem(pageData.pageOptions.sounds[i])+"</li>";
+                for(var i=0; i< pageData.pageBackgroundSound.length; i++){
+                    STR_HTML += "<li data-id='"+pageData.pageBackgroundSound[i].UniqueID+"'>"+_super.get_HTML_SoundItem(pageData.pageBackgroundSound[i].Path)+"</li>";
                 }
                 $(".editorSoundList").append(STR_HTML);
             }
@@ -73,10 +73,11 @@ var PageTextRadio = function(){
                 var editItem;
                 for(var i=0; i< pageData.pageOptions.texts.length; i++){
                     editItem = $(".editorTextQuestionList li").eq(pageData.pageOptions.texts[i].textSort);
+                    editItem.attr('data-id',pageData.pageOptions.texts[i].textId);
                     editItem.find("input[name=optionText]").val(pageData.pageOptions.texts[i].textContent);
                     if(pageData.pageOptions.texts[i].textBackgroundSound){
                         var Sound_HTML = _super.get_HTML_SoundItem(pageData.pageOptions.texts[i].textBackgroundSound);
-                        editItem.find("a:last").after(Sound_HTML);
+                        editItem.find(".soundPlaceholder").append(Sound_HTML);
                     }
                 }
             }
@@ -87,9 +88,9 @@ var PageTextRadio = function(){
                 if(pageData.pageAnswer.sounds instanceof Array && pageData.pageAnswer.sounds.length > 0){
                     var Sound_HTML ="";
                     for(var i=0; i< pageData.pageAnswer.sounds.length; i++){
-                        Sound_HTML += _super.get_HTML_SoundItem(pageData.pageAnswer.sounds[i]);
+                        Sound_HTML += _super.get_HTML_SoundItem(pageData.pageAnswer.sounds[i].Path);
                     }
-                    $(".editorBoxFooter a:last").after(Sound_HTML);
+                    $(".editorBoxFooter .soundPlaceholder").append(Sound_HTML);
                 }
             }
 

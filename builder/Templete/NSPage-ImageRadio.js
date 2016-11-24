@@ -9,7 +9,7 @@ var PageImageRadio = function(){
         STR_HTML += '<div class="editorBox" data-theme="allBoder">';
         STR_HTML += '<div class="editorBoxHeader"><span class="ui-icon ui-icon-image"></span><span>图片题目</span></div>';
         STR_HTML += '<div class="editorBoxInner">';
-        STR_HTML += '<ol id="imageOptionRect">';
+        STR_HTML += '<ol id="imageOptionRect" name="group_opts">';
         for(var i=0; i< 4;i++) {
             STR_HTML += '<li data-id="0">';
             STR_HTML += '<table width="100%" cellpadding="0" cellspacing="0">';
@@ -25,8 +25,8 @@ var PageImageRadio = function(){
             STR_HTML += '<input type="text"  value="" class="ui-textfield"  placeholder="图片描述" name="optionText"/>';
             STR_HTML += '</td>';
             STR_HTML += '<td>';
-            STR_HTML += '<a href="javascript:UploadFile('+UploadMediaTypeEnum.optionSound+','+i+')" data-type="button" data-theme="green" }">配音 </a> <br/><br/>';
-
+            STR_HTML += '<a href="javascript:UploadFile('+UploadMediaTypeEnum.optionSound+','+i+')" data-type="button" data-theme="green">配音 </a> <br/><br/>';
+            STR_HTML += '<span class="soundPlaceholder"></span>';
             STR_HTML += '</td>';
             STR_HTML += '</tr>';
             STR_HTML += '</table>';
@@ -38,25 +38,21 @@ var PageImageRadio = function(){
         STR_HTML += '<div class="editorBoxFooter">';
         STR_HTML += '<label>√ 正确答案 <input type="text" value="" class="ui-textfield" placeholder="答案" name="answerText"/></label>';
         STR_HTML += '<a href="javascript:UploadFile('+UploadMediaTypeEnum.answerSound+')" data-type="button" data-theme="green" >配音 </a>';
-
+        STR_HTML += '<span class="soundPlaceholder"></span>';
         STR_HTML += '</div>';
         STR_HTML += '</div>';
         STR_HTML += '</div>';
         return STR_HTML;
     };
-    _ImageRadioPage.setValue = function(pageData){
-        if(pageData){
-
-        }
-    };
-    _ImageRadioPage.setEditValue = function(pageData){
+    _ImageRadioPage.setEditValue = function(){
         var _super = this;
+        var pageData = _super.dataSource;
         if(pageData){
             //配音
-            if(pageData.pageOptions.sounds instanceof Array && pageData.pageOptions.sounds.length > 0){
+            if(pageData.pageBackgroundSound instanceof Array && pageData.pageBackgroundSound.length > 0){
                 var STR_HTML = '';
-                for(var i=0; i< pageData.pageOptions.sounds.length; i++){
-                    STR_HTML += "<li>"+_super.get_HTML_SoundItem(pageData.pageOptions.sounds[i])+"</li>";
+                for(var i=0; i< pageData.pageBackgroundSound.length; i++){
+                    STR_HTML += "<li data-id='"+pageData.pageBackgroundSound[i].UniqueID+"'>"+_super.get_HTML_SoundItem(pageData.pageBackgroundSound[i].Path)+"</li>";
                 }
                 $(".editorSoundList").append(STR_HTML);
             }
@@ -65,11 +61,12 @@ var PageImageRadio = function(){
                 var editItem;
                 for(var i=0; i< pageData.pageOptions.images.length; i++){
                     editItem = $("#imageOptionRect li").eq(pageData.pageOptions.images[i].imageSort);
+                    editItem.attr("data-id",pageData.pageOptions.images[i].imageId);
                     editItem.find("input[name=optionText]").val(pageData.pageOptions.images[i].imageDetail);
                     editItem.find(".editorImageRectInner").css("background-image","url("+pageData.pageOptions.images[i].imagePath+")");
                     if(pageData.pageOptions.images[i].imageBackgroundSound){
                         var Sound_HTML = _super.get_HTML_SoundItem(pageData.pageOptions.images[i].imageBackgroundSound);
-                        editItem.find("a:last").after(Sound_HTML);
+                        editItem.find(".soundPlaceholder").append(Sound_HTML);
                     }
                 }
             }
@@ -79,22 +76,14 @@ var PageImageRadio = function(){
                 if(pageData.pageAnswer.sounds instanceof Array && pageData.pageAnswer.sounds.length > 0){
                     var Sound_HTML ="";
                     for(var i=0; i< pageData.pageAnswer.sounds.length; i++){
-                        Sound_HTML += _super.get_HTML_SoundItem(pageData.pageAnswer.sounds[i]);
+                        Sound_HTML += _super.get_HTML_SoundItem(pageData.pageAnswer.sounds[i].Path);
                     }
-                    $(".editorBoxFooter a:last").after(Sound_HTML);
+                    $(".editorBoxFooter .soundPlaceholder").append(Sound_HTML);
                 }
             }
 
         }
     };
-    _ImageRadioPage.setEditEvent = function(){
-        $("#EditRect").on('click','a[data-type=button]',function(e){
 
-        });
-
-        $("input[type=text],textarea").on('blur',function(e){
-
-        });
-    };
     return _ImageRadioPage;
 }

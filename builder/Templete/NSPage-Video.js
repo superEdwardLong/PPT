@@ -16,12 +16,12 @@ var PageVideo = function(){
         STR_HTML += '</td>';
         STR_HTML += '<td>';
         STR_HTML += '<div class = "blackRect">';
-        STR_HTML += '<video  id="el_video">浏览器版本太旧，不支持video标签</video>'
+        STR_HTML += '<video  id="el_video" controls>浏览器版本太旧，不支持video标签</video>'
         STR_HTML += '</div>';
         STR_HTML += '</td>';
         STR_HTML += '<td width="15">';
         STR_HTML += '<a href="javascript:UploadFile('+UploadMediaTypeEnum.video+')" data-type="button"  data-theme="gray" >上传视频</a>';
-
+        STR_HTML += '<a href="javascript:UploadFile('+UploadMediaTypeEnum.videoCaptureImage+')" data-type="button"  data-theme="gray" >视频截图</a>';
         STR_HTML += '</td>';
         STR_HTML += '</tr>';
         STR_HTML += '</table>';
@@ -30,7 +30,11 @@ var PageVideo = function(){
         return STR_HTML;
     };
     _VideoPage.editor = function(superView){
-        var STR_HTML = "<audio id='editor_audio' class='editor_audio'> </audio><form name='PageUploadForm' id='PageUploadForm' method='post' enctype='multipart/form-data'> <input type='file' value=''  /> </form>";
+        var STR_HTML = "<audio id='editor_audio' class='editor_audio'> </audio>" +
+            "<form name='PageUploadForm' id='PageUploadForm' method='post' enctype='multipart/form-data'> " +
+            "<input id='fileTextField' name ='FileSource' type='file' value='' onchange='UploadFileToService(this)'/> " +
+            "</form>";
+
         if(this.editorMiddleItem && typeof (this.editorMiddleItem) == "function"){
             STR_HTML += this.editorMiddleItem();
         }
@@ -48,14 +52,14 @@ var PageVideo = function(){
 
     _VideoPage.setEditValue = function(pageData){
         if(pageData.pageVideo){
-            $("#el_video").attr('src',pageData.pageVideo);
+            $("#el_video").attr('src',pageData.pageVideo.Path);
         }
 
         //配音
-        if(pageData.pageOptions.sounds instanceof Array && pageData.pageOptions.sounds.length > 0){
+        if(pageData.pageBackgroundSound instanceof Array && pageData.pageBackgroundSound.length > 0){
             var STR_HTML = '';
-            for(var i=0; i< pageData.pageOptions.sounds.length; i++){
-                STR_HTML += "<li>"+_super.get_HTML_SoundItem(pageData.pageOptions.sounds[i])+"</li>";
+            for(var i=0; i< pageData.pageBackgroundSound.length; i++){
+                STR_HTML += "<li data-id='"+pageData.pageBackgroundSound[i].UniqueID+"'>"+_super.get_HTML_SoundItem(pageData.pageBackgroundSound[i].Path)+"</li>";
             }
             $(".editorSoundList").append(STR_HTML);
         }

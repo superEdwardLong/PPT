@@ -3,17 +3,18 @@
  */
 //页面数据结构
 var PageDataStructure = {
+    pageFnName:null,             //模版方法名称
     pageId:0,               //页面ID
-    pageBackgroundColor:null,  //页面背景色
-    pageBackgroundImage:null,  //页面背景图，权重大于背景色
-    pageBackgroundSound:null,  //页面背景音乐
+    pageBackgroundColor:null,  //页面背景色 string
+    pageBackgroundImage:null,  //页面背景图，权重大于背景色 string || object
+    pageBackgroundSound:null,  //页面背景音乐 string || object
     pageIcon:null,             //页面图标
     pageText:null,           //页面题目,string || object
-    pageVideo:null,          //视频地址
+    pageVideo:null,          //视频地址,string || object
     pageOptions:{
-        sounds:[],    //配音选项
-        images:[],   //图片选项
-        texts:[]    //文本选项
+        sounds:[],    //配音选项 => [ SoundItemDataStructrue, ... ... ]
+        images:[],   //图片选项 => [ ImageItemDataStructrue, ... ... ]
+        texts:[]    //文本选项 => [ TextItemDataStructrue, ... ... ]
     },
     pageAnswer:{
         answer:null,
@@ -49,13 +50,10 @@ var TextItemDataStructrue = {
     textBackgroundSound:null    //选项背景音乐
 }
 
-
-
 var scrollDirectionEnum = {
     horizontally:0,
     vertically:1
 }
-
 
 var UploadMediaTypeEnum = {
        backgroundImage:0,
@@ -73,23 +71,14 @@ var UploadMediaTypeEnum = {
        video:30
 }
 
-//图片裁剪对象
-var jcrop_api = null;
-var scale = 16/9;
-var selectedClipImage = "";
 
 
 ///// 课件页面
 var NSPPTPage = function(){
-    this.id = null;
-    this.backgroundSound = null;//背景音乐
     this.index =0;
     this.name = null;
-    this.dataSource = null; //数据源
-    this.backgroundColor = null; //背景颜色
-    this.subjectTitle = null;//题目主题
-    this.answer = null; //答案
-    this.answerSound = null;//答案配音
+    this.dataSource = $.extend(true,{},PageDataStructure); //数据源 => PageDataStructure
+
     this.fontOptions = [
         {fontName:'超大字号',fontSize:60},
         {fontName:'大字号',fontSize:48},
@@ -318,16 +307,11 @@ var NSPPTPage = function(){
             }
         }
     };
-    this.get_HTML_SoundItem = function(item){
-        if(typeof item =="string"){
-
-        }else if(typeof item == "object"){
-
-        }
-
-        var str_item = '<a class="soundItem" href="javascript:void(0)" data-type="button"  data-theme="gray">' +
-            '<span class="ui-icon ui-icon-soundWave "></span> <label>&nbsp;</label> </a> ';
-
+    this.get_HTML_SoundItem = function(soundPath){
+        var str_item = '';
+        str_item = '<a class="soundItem" onclick="playSound(this)" data-src="'+soundPath+'" data-type="button"  data-theme="green">' +
+            '<span class="ui-icon ui-icon-soundWave "></span><label></label>' +
+            '</a>';
         return str_item;
     };
     this.editorTopItem = function(){
@@ -369,7 +353,9 @@ var NSPPTPage = function(){
     };
     this.editor = function(superView){
         var STR_HTML = "<audio id='editor_audio' class='editor_audio'> </audio>";
-        STR_HTML += "<form name='PageUploadForm' id='PageUploadForm' method='post' enctype='multipart/form-data'> <input id='fileTextField' type='file' value='' onchange='UploadFileToService(this)'/> </form>";
+        STR_HTML += "<form name='PageUploadForm' id='PageUploadForm' method='post' enctype='multipart/form-data'> " +
+            "<input id='fileTextField' name ='FileSource' type='file' value='' onchange='UploadFileToService(this)'/> " +
+            "</form>";
         if(this.editorTopItem && typeof (this.editorTopItem) == "function"){
             STR_HTML += this.editorTopItem();
         }
@@ -380,15 +366,32 @@ var NSPPTPage = function(){
             STR_HTML += this.editorBottomItem();
         }
         superView.html(STR_HTML);
+
+        //配置事件
         if(this.setEditEvent && typeof this.setEditEvent == "function"){
             this.setEditEvent();
         }
 
+        //值填充
+        if(this.setEditValue && typeof this.setEditValue == "function"){
+            this.setEditValue(this.dataSource);
+        }
     };
+
+    this.setEditValue = function(){
+        console.log('后台编辑区 元素赋值');
+    };
+    this.setEditEvent = function(){
+        console.log("后台编辑区 事件");
+    };
+
 
     //展示方法
     this.show = function(){
 
+    };
+    this.setShowValue = function(){
+        console.log('前端展示区 元素赋值');
     };
     //展示事件
     this.setShowEvent = function(){
@@ -401,7 +404,19 @@ var NSPPTPage = function(){
 
     //数据逆向适配
     this.reverseAdapter = function(){
-    }
+    };
+
+    this.setDataSource = function(data,isEdit){
+        if(data){
+            this.dataSource = data;
+            if(isEdit){
+                this.setEditValue();
+            }else{
+                this.setShowValue();
+            }
+
+        }
+    };
 }
 
 
@@ -561,7 +576,7 @@ function UploadFile(mediaType){
 
     }else if(UploadMediaTypeEnum.videoCaptureImage < mediaType && mediaType < UploadMediaTypeEnum.video){
         _form.children("input[type=hidden]").remove();
-        _fileInput.attr({"accept":"audio/*","ready":1});
+        _fileInput.attr({"accept":".mp3,.wav,.ogg","ready":1});
         //音频文件
 
     }else if(mediaType == UploadMediaTypeEnum.video){
@@ -628,12 +643,32 @@ function UploadFileToService(element){
     }
 
     var interFace;
-    if(mediaType < UploadMediaTypeEnum.videoCaptureImage){
+    if(_mediaType < UploadMediaTypeEnum.videoCaptureImage){
         interFace = "UploadSubjectImage/AddImage";
-    }else if(UploadMediaTypeEnum.videoCaptureImage < mediaType && mediaType < UploadMediaTypeEnum.video){
+        if(_mediaType == UploadMediaTypeEnum.optionImage){
+            $("ol[name=group_opts] li").eq(_index).find(".editorImageRectInner").append("<div class='uploadLoading'><img src='dist/Images/ui-loading.gif' /> 文件上传中...</div>");
+        }else{
+            $(".clipRect").next('div').append("<div class='uploadLoading' style='display: inline-block'><img src='dist/Images/ui-loading.gif' /> 文件上传中...</div>");
+        }
+
+    }else if(UploadMediaTypeEnum.backgroundSound <= _mediaType && _mediaType <= UploadMediaTypeEnum.nilBackgroundSound){
         interFace = "UploadSubjectSound/AddSound";
+        switch (_mediaType){
+            case UploadMediaTypeEnum.answerSound:{
+                $(".editorBoxFooter").append("<div class='uploadLoading' style='display: inline-block'><img src='dist/Images/ui-loading.gif' /> 文件上传中...</div>");
+            }break;
+            case UploadMediaTypeEnum.optionSound:{
+                $("ol[name=group_opts] li").eq(_index).find(".soundPlaceholder").before("<div class='uploadLoading' style='display: inline-block'><img src='dist/Images/ui-loading.gif' /> 文件上传中...</div>");
+            }break;
+            default:{
+                $(".editorSoundList").before("<div class='uploadLoading'><img src='dist/Images/ui-loading.gif' /> 文件上传中...</div>");
+            }break;
+        }
+
+
     }else if(mediaType == UploadMediaTypeEnum.video){
         interFace = "UploadSubjectVideo/AddSound";
+        $(".blackRect").before("<div class='uploadLoading'><img src='dist/Images/ui-loading.gif' /> 文件上传中...</div>")
     }
 
     $("#PageUploadForm").ajaxSubmit({
@@ -641,6 +676,7 @@ function UploadFileToService(element){
         url: "/PPTWebApi/Api/" + interFace,
         headers: { "Token": mySelf.token},
         success: function (result) {
+            $(".uploadLoading").remove();
             if (result.Status == 1) {
                 DidUploadCallback(result,_mediaType,_index);
             } else {
@@ -649,18 +685,24 @@ function UploadFileToService(element){
         },
         error: function (XmlHttpRequest, textStatus, errorThrown) {
             alert("文件上传失败");
+            $(".uploadLoading").remove();
         }
     });
 }
 
 function DidUploadCallback(sender,mediaType,optionIndex){
-    //统一适配对象
+    //统一适配多媒体数据对象
     var media = {
-        UniqueID:0,Path:null
+        UniqueID:0,
+        Path:null
     };
+
     if(mediaType <= UploadMediaTypeEnum.videoCaptureImage){
+        //关闭裁剪窗口
+        layer.closeAll();
         media.UniqueID = sender.ImagePath.UniqueID;
         media.Path = sender.ImagePath.ImagePath;
+
     }else if(mediaType <= UploadMediaTypeEnum.nilBackgroundSound){
         media.UniqueID = sender.BASound.UniqueID;
         media.Path = sender.BASound.SoundPath;
@@ -668,38 +710,128 @@ function DidUploadCallback(sender,mediaType,optionIndex){
         media.UniqueID = sender.VedioPath.UniqueID;
         media.Path = sender.VedioPath.VedioPath;
     }
-    //根据类型 作相应的互动
+    /*=============================================
+    * 根据类型 作相应的互动
+    * 1:元素填充
+    * 2:indexedDB数据更新
+    * 3:实时绘制缩略图
+    * ==========================================*/
     switch (mediaType){
         //图片
         case UploadMediaTypeEnum.backgroundImage:{
+            $(".dashedRect").html("<div class='imgRect' data-id='"+media.UniqueID+"' style='background-image: url("+media.Path+")'></div>");
+            //update indexeddb data
+            PPT.currtPage.dataSource.pageBackgroundImage = media;
+            //draw element to canvas
 
         }break;
         case UploadMediaTypeEnum.optionImage:{
+            $("#imageOptionRect li").eq(i).find(".editorImageRectInner").css("background-image","url('"+media.Path+"')").attr("data-id",media.UniqueID);
+            //update indexeddb data
+            var _optionItemDb;
+            var hasItem = false;
+            for(var i=0; i< PPT.currtPage.dataSource.pageOptions.images.length; i++){
+                if(PPT.currtPage.dataSource.pageOptions.images[i].imageSort == optionIndex){
+                    hasItem = true;
+                    PPT.currtPage.dataSource.pageOptions.images[i].imagePath = media.Path;
+                    break;
+                }
+            }
+            if(!hasItem){
+                _optionItemDb = $.extend(true,ImageItemDataStructrue,{imageSort:optionIndex,imagePath:media.Path});
+                PPT.currtPage.dataSource.pageOptions.images.push(_optionItemDb);
+            }
+            //draw element to canvas
 
         }break;
         case UploadMediaTypeEnum.iconImage:{
+            $(".dashedRect").html("<div data-id='"+media.UniqueID+"' class='imgRect' style='background-image: url("+media.Path+")'></div>");
+            //update indexeddb data
+            PPT.currtPage.dataSource.pageIcon = media;
+
+            //draw element to canvas
 
         }break;
         case UploadMediaTypeEnum.elementImage:{
-
+            //update indexeddb data
+            //draw element to canvas
         }break;
         case UploadMediaTypeEnum.videoCaptureImage:{
-
+            //update indexeddb data
+            //draw element to canvas
         }break;
         //音频
         case UploadMediaTypeEnum.backgroundSound:
         case UploadMediaTypeEnum.nilBackgroundSound:{
+            var _strItem = '<li data-id="'+media.UniqueID+'"> ' + PPT.currtPage.get_HTML_SoundItem(media.Path)+'</li> ';
+            //ADD DOM ELEMENT
+            $(".editorSoundList").append(_strItem);
+            //COUNT MIDIA FILE DURATION
+            getAudioDuration(media,$(".editorSoundList li[data-id="+media.UniqueID+"] .ui-icon").next('label'));
+
+            //update indexeddb data
+            if(PPT.currtPage.dataSource.pageBackgroundSound instanceof Array){
+                PPT.currtPage.dataSource.pageBackgroundSound.push(media);
+            }else{
+                PPT.currtPage.dataSource.pageBackgroundSound = [media];
+            }
 
         }break;
+
         case UploadMediaTypeEnum.optionSound:{
+            var _strItem = PPT.currtPage.get_HTML_SoundItem(media.Path);
+            var _itemOption = $("ol[name=group_opts] li").eq(optionIndex).find(".soundPlaceholder");
+            _itemOption.append(_strItem);
+            getAudioDuration(media,_itemOption.find('.soundItem:last label'));
+
+            //update indexeddb data
+            var _optionItemDb;
+            var hasItem = false;
+            switch(PPT.currtPage.name){
+                case "PageImageRadio":{
+                        for(var i=0; i< PPT.currtPage.dataSource.pageOptions.images.length; i++){
+                            if(PPT.currtPage.dataSource.pageOptions.images[i].imageSort == optionIndex){
+                                hasItem = true;
+                                PPT.currtPage.dataSource.pageOptions.images[i].imageBackgroundSound = media.Path;
+                                break;
+                            }
+                        }
+                        if(!hasItem){
+                            _optionItemDb = $.extend(true,ImageItemDataStructrue,{imageSort:optionIndex,imageBackgroundSound:media.Path});
+                            PPT.currtPage.dataSource.pageOptions.images.push(_optionItemDb);
+                        }
+                }break;
+                default:{
+                    for(var i=0; i< PPT.currtPage.dataSource.pageOptions.texts.length; i++){
+                        if(PPT.currtPage.dataSource.pageOptions.texts[i].textSort == optionIndex){
+                            hasItem = true;
+                            PPT.currtPage.dataSource.pageOptions.texts[i].textBackgroundSound = media.Path;
+                            break;
+                        }
+                    }
+                    if(!hasItem){
+                        _optionItemDb = $.extend(true,TextItemDataStructrue,{textSort:optionIndex,textBackgroundSound:media.Path,});
+                        PPT.currtPage.dataSource.pageOptions.texts.push(_optionItemDb);
+                    }
+                }break;
+            }
 
         }break;
         case UploadMediaTypeEnum.answerSound:{
+            var _strItem = PPT.currtPage.get_HTML_SoundItem(media.Path);
+            var _itemOption = $(".editorBoxFooter .soundPlaceholder");
+            _itemOption.append(_strItem);
+            getAudioDuration(media,_itemOption.find('.soundItem:last label'));
+
+            //update indexeddb data
+            PPT.currtPage.dataSource.pageAnswer.sounds.push(media);
 
         }break;
 
         //视频
         case UploadMediaTypeEnum.video:{
+            $("#el_video").attr("src",media.Path);
+            PPT.currtPage.dataSource.pageVideo = media;
 
         }break;
     }
@@ -712,6 +844,10 @@ function DidUploadCallback(sender,mediaType,optionIndex){
 *
 *=============================*/
 //初始化裁剪插件
+//图片裁剪对象
+var jcrop_api = null;
+var scale = 16/9;
+var selectedClipImage = "";
 function Jcrop_Init(){
     if(jcrop_api){
         jcrop_api.destroy();
@@ -758,3 +894,46 @@ var showCoords = function (c) {
     form.find("input[name = img_w]").val(parseInt(c.w));
     form.find("input[name = img_h]").val(parseInt(c.h));
 }
+
+/*==============================
+ * 声音播放
+ *
+ *
+ *
+ *=============================*/
+//音频播放
+function playSound(element){
+    var _audio = document.getElementById('editor_audio');
+    if($(element).children('.ui-icon-soundWave').attr("data-state") == undefined){
+        $(element).children('.ui-icon-soundWave').attr("data-state","on");
+        var _src = $(element).attr("data-src");
+        _audio.setAttribute('src',_src);
+        _audio.play();
+    }else{
+        $(element).children('.ui-icon-soundWave').removeAttr("data-state");
+        _audio.pause();
+    }
+}
+
+//读取文件时长
+function getAudioDuration(sender,selector){
+    var _audioEle = new Audio(sender.Path);
+    _audioEle.addEventListener("canplaythrough",function(e){
+        var mm,ss;
+        var timeText = "";
+        if(_audioEle.duration == Infinity){
+            ss = "∞";
+        }else{
+            mm = parseInt(_audioEle.duration /60);
+            ss = parseInt(_audioEle.duration - (mm*60));
+
+            if(mm > 0){
+                timeText += mm+"''";
+            }
+        }
+
+        timeText += ss+"'";
+        selector.text(timeText);
+        _audioEle = null;
+    },false);
+};

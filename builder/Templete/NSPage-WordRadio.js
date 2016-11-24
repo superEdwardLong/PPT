@@ -36,10 +36,10 @@ var PageWordRadio = function(){
     _WordRadioPage.setEditValue = function(pageData){
         var _super = this;
         //配音
-        if(pageData.pageOptions.sounds instanceof Array && pageData.pageOptions.sounds.length > 0){
+        if(pageData.pageBackgroundSound instanceof Array && pageData.pageBackgroundSound.length > 0){
             var STR_HTML = '';
-            for(var i=0; i< pageData.pageOptions.sounds.length; i++){
-                STR_HTML += "<li>"+_super.get_HTML_SoundItem(pageData.pageOptions.sounds[i])+"</li>";
+            for(var i=0; i< pageData.pageBackgroundSound.length; i++){
+                STR_HTML += "<li data-id='"+pageData.pageBackgroundSound[i].UniqueID+"'>"+_super.get_HTML_SoundItem(pageData.pageBackgroundSound[i].Path)+"</li>";
             }
             $(".editorSoundList").append(STR_HTML);
         }
@@ -62,9 +62,9 @@ var PageWordRadio = function(){
             if(pageData.pageAnswer.sounds instanceof Array && pageData.pageAnswer.sounds.length > 0){
                 var Sound_HTML ="";
                 for(var i=0; i< pageData.pageAnswer.sounds.length; i++){
-                    Sound_HTML += _super.get_HTML_SoundItem(pageData.pageAnswer.sounds[i]);
+                    Sound_HTML += _super.get_HTML_SoundItem(pageData.pageAnswer.sounds[i].Path);
                 }
-                $(".editorBoxFooter a:last").after(Sound_HTML);
+                $(".editorBoxFooter .soundPlaceholder").append(Sound_HTML);
             }
         }
 

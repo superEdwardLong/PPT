@@ -1,5 +1,27 @@
 @charset "UTF-8";
 /* 通用 CSS */
+@-webkit-keyframes PlaySoundAnimate {
+  from {
+    background-image: url(../Images/ui_sound_0.png); }
+  25% {
+    background-image: url(../Images/ui_sound_1.png); }
+  50% {
+    background-image: url(../Images/ui_sound_2.png); }
+  75% {
+    background-image: url(../Images/ui_sound_3.png); }
+  to {
+    background-image: url(../Images/ui_sound_0.png); } }
+@keyframes PlaySoundAnimate {
+  from {
+    background-image: url(../Images/ui_sound_0.png); }
+  25% {
+    background-image: url(../Images/ui_sound_1.png); }
+  50% {
+    background-image: url(../Images/ui_sound_2.png); }
+  75% {
+    background-image: url(../Images/ui_sound_3.png); }
+  to {
+    background-image: url(../Images/ui_sound_0.png); } }
 html, body {
   padding: 0;
   margin: 0 auto;
@@ -741,6 +763,30 @@ header {
   background-image: url(../Images/ui_sound_normal.png);
   background-position: center center; }
 
+.ui-icon-soundWave[data-state="on"] {
+  -webkit-animation-name: PlaySoundAnimate;
+  animation-name: PlaySoundAnimate;
+  /*先执行一遍动画，再反向执行
+  animation-direction: alternate;
+  -webkit-animation-direction: alternate;*/
+  /*动画时长*/
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  /*动画填充模式*/
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  /*永远执行*/
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite; }
+
+.uploadLoading {
+  display: block;
+  padding: .5rem;
+  text-align: center;
+  color: #999; }
+  .uploadLoading img {
+    padding: 0 .25rem; }
+
 .ui-icon-arrowDown {
   background-image: none;
   position: relative; }
@@ -1373,6 +1419,9 @@ header {
     height: 2rem;
     position: relative; }
 
+.soundPlaceholder .soundItem {
+  text-align: left; }
+
 .editorTextQuestionList li {
   margin: 0.5rem; }
   .editorTextQuestionList li .ui-textfield {
@@ -1412,7 +1461,8 @@ header {
   color: #d0d0d0;
   font-size: 2rem;
   text-align: center;
-  font-family: Arial; }
+  font-family: Arial;
+  z-index: -1; }
 
 .blackRect {
   width: 30rem;

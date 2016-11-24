@@ -23,7 +23,7 @@
                                 "keyPath":"uid"
                             });
                             item.createIndex(tableArr[i].orderBy);
-                            //console.log("Created new object store ["+tableNameArr[i]+"]");
+                            console.log("Created new object store ["+tableArr[i].tableName+"]");
                         }
                     }
                 }
@@ -34,6 +34,7 @@
     /*表:添加一条记录*/
     function InsertInto(table,itemStore,callback){
         $.indexedDB(_dbName).objectStore(table, true).add(itemStore).then(function (val) {
+            console.log("add item success")
             if(callback){
                 callback.call(this,val);
             }
